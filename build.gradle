@@ -4,7 +4,7 @@ plugins {
 }
 
 application {
-    mainClass = 'net.vansen.noksdb.test.LocalSQLVsNoksDB'
+    mainClass = 'net.vansen.noksdb.tests.LocalSQLVsNoksDB'
     applicationDefaultJvmArgs = ['-XX:+UseZGC', '-Xmx16g']
 }
 
@@ -37,6 +37,7 @@ dependencies {
     implementation 'org.apache.derby:derby:10.16.1.1'
     implementation 'org.lmdbjava:lmdbjava:0.9.0'
     implementation 'com.google.guava:guava:33.4.0-jre'
+    implementation 'org.agrona:agrona:2.0.0'
 }
 
 test {

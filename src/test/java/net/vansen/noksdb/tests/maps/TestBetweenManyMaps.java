@@ -1,4 +1,4 @@
-package net.vansen.noksdb.test.maps;
+package net.vansen.noksdb.tests.maps;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,13 +27,13 @@ public class TestBetweenManyMaps {
             Map<String, String> hashMap = new HashMap<>();
             nano = System.nanoTime();
             for (int j = 0; j < NUM_ITERATIONS; j++) {
-                hashMap.put("test" + j, "test" + j);
+                hashMap.put("tests" + j, "tests" + j);
             }
             hashMapPutTimes[i] = System.nanoTime() - nano;
 
             nano = System.nanoTime();
             for (int j = 0; j < NUM_ITERATIONS; j++) {
-                hashMap.get("test" + j);
+                hashMap.get("tests" + j);
             }
             hashMapGetTimes[i] = System.nanoTime() - nano;
 
@@ -41,13 +41,13 @@ public class TestBetweenManyMaps {
             Map<String, String> linkedHashMap = new LinkedHashMap<>();
             nano = System.nanoTime();
             for (int j = 0; j < NUM_ITERATIONS; j++) {
-                linkedHashMap.put("test" + j, "test" + j);
+                linkedHashMap.put("tests" + j, "tests" + j);
             }
             linkedHashMapPutTimes[i] = System.nanoTime() - nano;
 
             nano = System.nanoTime();
             for (int j = 0; j < NUM_ITERATIONS; j++) {
-                linkedHashMap.get("test" + j);
+                linkedHashMap.get("tests" + j);
             }
             linkedHashMapGetTimes[i] = System.nanoTime() - nano;
 
@@ -55,13 +55,13 @@ public class TestBetweenManyMaps {
             Map<String, String> concurrentHashMap = new ConcurrentHashMap<>();
             nano = System.nanoTime();
             for (int j = 0; j < NUM_ITERATIONS; j++) {
-                concurrentHashMap.put("test" + j, "test" + j);
+                concurrentHashMap.put("tests" + j, "tests" + j);
             }
             concurrentHashMapPutTimes[i] = System.nanoTime() - nano;
 
             nano = System.nanoTime();
             for (int j = 0; j < NUM_ITERATIONS; j++) {
-                concurrentHashMap.get("test" + j);
+                concurrentHashMap.get("tests" + j);
             }
             concurrentHashMapGetTimes[i] = System.nanoTime() - nano;
 
@@ -70,13 +70,13 @@ public class TestBetweenManyMaps {
             Map<String, String> treeMap = new TreeMap<>();
             nano = System.nanoTime();
             for (int j = 0; j < NUM_ITERATIONS; j++) {
-                treeMap.put("test" + j, "test" + j);
+                treeMap.put("tests" + j, "tests" + j);
             }
             treeMapPutTimes[i] = System.nanoTime() - nano;
 
             nano = System.nanoTime();
             for (int j = 0; j < NUM_ITERATIONS; j++) {
-                treeMap.get("test" + j);
+                treeMap.get("tests" + j);
             }
             treeMapGetTimes[i] = System.nanoTime() - nano;
 
@@ -84,13 +84,13 @@ public class TestBetweenManyMaps {
             Map<String, String> concurrentSkipListMap = new ConcurrentSkipListMap<>();
             nano = System.nanoTime();
             for (int j = 0; j < NUM_ITERATIONS; j++) {
-                concurrentSkipListMap.put("test" + j, "test" + j);
+                concurrentSkipListMap.put("tests" + j, "tests" + j);
             }
             concurrentSkipListMapPutTimes[i] = System.nanoTime() - nano;
 
             nano = System.nanoTime();
             for (int j = 0; j < NUM_ITERATIONS; j++) {
-                concurrentSkipListMap.get("test" + j);
+                concurrentSkipListMap.get("tests" + j);
             }
             concurrentSkipListMapGetTimes[i] = System.nanoTime() - nano;
              */

@@ -1,6 +1,6 @@
-package net.vansen.noksdb.test.compression;
+package net.vansen.noksdb.tests.compression;
 
-import net.vansen.noksdb.NoksDBMap;
+import net.vansen.noksdb.NoksDB;
 import net.vansen.noksdb.compression.Compression;
 import net.vansen.noksdb.compression.ZstdCompression;
 
@@ -18,10 +18,10 @@ public class CompressionTest {
     public static void compressBenchmarks() {
         int[] numIterations = {1, 100, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 100000, 1000000};
 
-        System.out.println("Put performance test:");
+        System.out.println("Put performance tests:");
         for (int numIter : numIterations) {
-            // NoksDBMap
-            NoksDBMap db = NoksDBMap.builder()
+            // NoksDB
+            NoksDB db = NoksDB.builder()
                     .storageFile(new File("tests\\noksdb compressed " + numIter + ".dat"))
                     .autoSave(false)
                     .compression(compresser)
@@ -30,7 +30,7 @@ public class CompressionTest {
             long startTimeNs = System.nanoTime();
             long startTimeMs = System.currentTimeMillis();
             for (int i = 0; i < numIter; i++) {
-                db.createRow("user" + i)
+                db.rowOf("user" + i)
                         .value("balance", i)
                         .insert();
             }
@@ -38,7 +38,7 @@ public class CompressionTest {
             long endTimeMs = System.currentTimeMillis();
             long durationNs = endTimeNs - startTimeNs;
             long durationMs = endTimeMs - startTimeMs;
-            System.out.println("NoksDBMap:");
+            System.out.println("NoksDB:");
             System.out.println("Num iterations: " + numIter);
             System.out.println("Time taken (ns): " + durationNs);
             System.out.println("Time taken (ms): " + durationMs);
@@ -76,7 +76,7 @@ public class CompressionTest {
             conn.close();
 
             // H2
-            conn = DriverManager.getConnection("jdbc:h2:file:D:\\minecraft\\Projects\\NoksDBMap\\tests\\h2 " + numIter + ".db");
+            conn = DriverManager.getConnection("jdbc:h2:file:D:\\minecraft\\Projects\\NoksDB\\tests\\h2 " + numIter + ".db");
             stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS users (balance INTEGER)");
             stmt.execute();
             stmt = conn.prepareStatement("INSERT INTO users (balance) VALUES (?)");
@@ -108,12 +108,12 @@ public class CompressionTest {
     }
 
     public static void ensureWorks(int num) {
-        NoksDBMap db = NoksDBMap.builder()
+        NoksDB db = NoksDB.builder()
                 .storageFile(new File("tests\\noksdb compressed " + num + ".dat"))
                 .autoSave(false)
                 .compression(compresser)
                 .build();
 
-        System.out.println(db.fetch().where("user50").key("balance").get());
+        System.out.println(db.fetch("user50").field("balance").get());
     }
 }

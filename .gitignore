@@ -43,3 +43,8 @@ bin/
 
 ### Usually NoksDB files ###
 **/*.dat
+
+### Tests ###
+/test
+/results
+**/*.jfr

@@ -1,4 +1,4 @@
-package net.vansen.noksdb.test.random;
+package net.vansen.noksdb.tests.random;
 
 import it.unimi.dsi.fastutil.objects.*;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ public class NoksTest {
 
     public static void main(String[] args) throws IOException, SQLException {
         /*
-        NoksDBMap.Table users = db.table("users");
+        NoksDB.Table users = db.table("users");
 
         for (int i = 0; i < 100000; i++) {
             users.createRow("user" + i)
@@ -46,7 +46,7 @@ public class NoksTest {
         */
 
         /*
-        NoksDBMap db = NoksDBMap.builder()
+        NoksDB db = NoksDB.builder()
                 .storageFile(new File("tests\\noksdb compressed 1000000.dat"))
                 .autoSave(false)
                 .compression(new LZFCompression())
@@ -59,10 +59,10 @@ public class NoksTest {
         int[] numIterations = {1, 100, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 100000, 1000000};
         int warmup = 10;
 
-        System.out.println("Put performance test:");
+        System.out.println("Put performance tests:");
         for (int numIter : numIterations) {
-            // NoksDBMap
-            NoksDBMap db = NoksDBMap.builder()
+            // NoksDB
+            NoksDB db = NoksDB.builder()
                     .storageFile(new File("tests\\noksdb " + numIter + ".dat"))
                     .autoSave(false)
                     .build();
@@ -85,7 +85,7 @@ public class NoksTest {
             long endTimeMs = System.currentTimeMillis();
             long durationNs = endTimeNs - startTimeNs;
             long durationMs = endTimeMs - startTimeMs;
-            System.out.println("NoksDBMap:");
+            System.out.println("NoksDB:");
             System.out.println("Num iterations: " + numIter);
             System.out.println("Time taken (ns): " + durationNs);
             System.out.println("Time taken (ms): " + durationMs);
@@ -130,7 +130,7 @@ public class NoksTest {
             conn.close();
 
             // H2
-            conn = DriverManager.getConnection("jdbc:h2:file:D:\\minecraft\\Projects\\NoksDBMap\\tests\\h2 " + numIter + ".db");
+            conn = DriverManager.getConnection("jdbc:h2:file:D:\\minecraft\\Projects\\NoksDB\\tests\\h2 " + numIter + ".db");
             stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS users (balance INTEGER)");
             stmt.execute();
 
@@ -171,7 +171,7 @@ public class NoksTest {
         */
 
         /*
-        System.out.println("Get performance test:");
+        System.out.println("Get performance tests:");
         for (int numIter : numIterations) {
             long startTimeNs = System.nanoTime();
             long startTimeMs = System.currentTimeMillis();
@@ -367,7 +367,7 @@ public class NoksTest {
     @Test
     public static void testPutAndGet() {
         File dbFile = new File("noksdb.dat");
-        NoksDBMap db = new NoksDBMap.Builder()
+        NoksDB db = new NoksDB.Builder()
                 .storageFile(dbFile)
                 .autoSave(false)
                 .build();
@@ -389,7 +389,7 @@ public class NoksTest {
     @Test
     public static void testSaveAndLoad() {
         File dbFile = new File("noksdb.dat");
-        NoksDBMap<String> db = new NoksDBMap.Builder<String>()
+        NoksDB<String> db = new NoksDB.Builder<String>()
                 .storageFile(dbFile)
                 .autoSave(false)
                 .build();
@@ -401,7 +401,7 @@ public class NoksTest {
 
         db.save();
 
-        NoksDBMap<String> loadedDb = new NoksDBMap.Builder<String>()
+        NoksDB<String> loadedDb = new NoksDB.Builder<String>()
                 .storageFile(dbFile)
                 .autoSave(false)
                 .build();
@@ -418,7 +418,7 @@ public class NoksTest {
     @Test
     public static void testPutAndGetDifferentObjects() {
         File dbFile = new File("noksdb.dat");
-        NoksDBMap<String> db = new NoksDBMap.Builder<String>()
+        NoksDB<String> db = new NoksDB.Builder<String>()
                 .storageFile(dbFile)
                 .autoSave(false)
                 .build();

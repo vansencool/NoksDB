@@ -1,7 +1,7 @@
 package net.vansen.noksdb.compression;
 
 /**
- * Interface for compression algorithms used in NoksDBMap.
+ * Interface for compression algorithms used in NoksDB.
  * <p>
  * Implementations of this interface provide methods for compressing and decompressing byte arrays.
  * <p>

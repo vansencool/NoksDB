@@ -1,7 +1,6 @@
-package net.vansen.noksdb.test;
+package net.vansen.noksdb.tests;
 
-import net.vansen.noksdb.NoksDBMap;
-import net.vansen.noksdb.types.MapType;
+import net.vansen.noksdb.NoksDB;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -17,21 +16,21 @@ public class EnsureWorksTest {
     @Test
     public static void testPutAndGet() {
         File dbFile = new File("noksdb.dat");
-        NoksDBMap db = new NoksDBMap.Builder()
+        NoksDB db = new NoksDB.Builder()
                 .storageFile(dbFile)
                 .autoSave(false)
-                .mapType(MapType.HASHMAP)
                 .build();
 
         String key = "testKey";
         String value = "testValue";
 
-        db.createRow(key).value(key, value).insert();
+        db.rowOf(key)
+                .value(key, value)
+                .insert();
 
-        String retrievedValue = (String) db.fetch()
-                .where(key)
-                .key(key)
-                .getFaster();
+        String retrievedValue = (String) db.fetch(key)
+                .field(key)
+                .get();
 
         System.out.println("Test Put and Get:");
         System.out.println("Key: " + key);
@@ -43,7 +42,7 @@ public class EnsureWorksTest {
     @Test
     public static void testSaveAndLoad() {
         File dbFile = new File("noksdb.dat");
-        NoksDBMap db = NoksDBMap.builder()
+        NoksDB db = NoksDB.builder()
                 .storageFile(dbFile)
                 .autoSave(false)
                 .build();
@@ -51,17 +50,20 @@ public class EnsureWorksTest {
         String key = "testKey";
         String value = "testValue";
 
-        db.createRow(key).value(key, value).insert();
+        db.rowOf(key)
+                .value(key, value)
+                .insert();
 
         db.save();
 
-        NoksDBMap loadedDb = NoksDBMap.builder()
+        NoksDB loadedDb = NoksDB.builder()
                 .storageFile(dbFile)
                 .autoSave(false)
-                .mapType(MapType.HASHMAP)
                 .build();
 
-        String retrievedValue = (String) loadedDb.fetch().where(key).key(key).get();
+        String retrievedValue = (String) loadedDb.fetch(key)
+                .field(key)
+                .get();
 
         System.out.println("Test Save and Load:");
         System.out.println("Key: " + key);
@@ -73,10 +75,9 @@ public class EnsureWorksTest {
     @Test
     public static void testPutAndGetDifferentObjects() {
         File dbFile = new File("noksdb.dat");
-        NoksDBMap db = NoksDBMap.builder()
+        NoksDB db = NoksDB.builder()
                 .storageFile(dbFile)
                 .autoSave(false)
-                .mapType(MapType.HASHMAP)
                 .build();
 
         String key1 = "testKey1";
@@ -85,11 +86,19 @@ public class EnsureWorksTest {
         String key2 = "testKey2";
         String value2 = "testValue2";
 
-        db.createRow(key1).value("balance", value1).insert();
-        db.createRow(key2).value("balance", value2).insert();
+        db.rowOf(key1)
+                .value("balance", value1)
+                .insert();
+        db.rowOf(key2)
+                .value("balance", value2)
+                .insert();
 
-        String retrievedValue1 = (String) db.fetch().where(key1).key("balance").get();
-        String retrievedValue2 = (String) db.fetch().where(key2).key("balance").get();
+        String retrievedValue1 = (String) db.fetch(key1)
+                .field("balance")
+                .get();
+        String retrievedValue2 = (String) db.fetch(key2)
+                .field("balance")
+                .get();
 
         System.out.println("Test Put and Get Different Objects:");
         System.out.println("Key 1: " + key1);
