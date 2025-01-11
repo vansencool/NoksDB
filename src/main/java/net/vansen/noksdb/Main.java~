@@ -1,0 +1,90 @@
+package net.vansen.noksdb;
+
+import org.apache.fury.Fury;
+import org.apache.fury.config.Language;
+
+import java.util.Arrays;
+
+public class Main {
+
+    public static void main(String[] args) {
+        /*
+        File dbFile = new File("noksdb.dat");
+        long start = System.currentTimeMillis();
+        NoksDB<TestObject> db = new NoksDB.Builder<TestObject>()
+                .storageFile(dbFile)
+                .build();
+
+        long endTime = System.currentTimeMillis();
+        System.out.println("Time taken to initialize (ms): " + (endTime - start));
+
+         */
+
+        /*
+        int[] numIterations = {100};
+
+        System.out.println("Put performance test:");
+        for (int numIter : numIterations) {
+            long startTimeNs = System.nanoTime();
+            long startTimeMs = System.currentTimeMillis();
+            for (int i = 0; i < numIter; i++) {
+                db.put("key" + i, new TestObject("test" + i, i));
+            }
+            long endTimeNs = System.nanoTime();
+            long endTimeMs = System.currentTimeMillis();
+            long durationNs = endTimeNs - startTimeNs;
+            long durationMs = endTimeMs - startTimeMs;
+            System.out.println("Num iterations: " + numIter);
+            System.out.println("Time taken (ns): " + durationNs);
+            System.out.println("Time taken (ms): " + durationMs);
+            System.out.println("Average time per iteration (ns): " + (durationNs / (double) numIter));
+            System.out.println("Average time per iteration (ms): " + (durationMs / (double) numIter));
+            System.out.println();
+        }
+
+        // Test get performance
+        System.out.println("Get performance test:");
+        for (int numIter : numIterations) {
+            long startTimeNs = System.nanoTime();
+            long startTimeMs = System.currentTimeMillis();
+            for (int i = 0; i < numIter; i++) {
+                db.get("key" + i, TestObject.class);
+
+            }
+            long endTimeNs = System.nanoTime();
+            long endTimeMs = System.currentTimeMillis();
+            long durationNs = endTimeNs - startTimeNs;
+            long durationMs = endTimeMs - startTimeMs;
+            System.out.println("Num iterations: " + numIter);
+            System.out.println("Time taken (ns): " + durationNs);
+            System.out.println("Time taken (ms): " + durationMs);
+            System.out.println("Average time per iteration (ns): " + (durationNs / (double) numIter));
+            System.out.println("Average time per iteration (ms): " + (durationMs / (double) numIter));
+            System.out.println();
+        }
+
+         */
+
+        /*
+        db.put("verycoolstuff", new TestObject("vansen", 20));
+
+        db.save();
+
+        System.out.println(db.get("verycoolstuff", TestObject.class).getName() + " " + db.get("verycoolstuff", TestObject.class).getAge());
+
+         */
+
+        Fury fury = Fury.builder().withLanguage(Language.JAVA)
+                // Allow to deserialize objects unknown types,
+                // more flexible but less secure.
+                // .withSecureMode(false)
+                .requireClassRegistration(false)
+                .de
+                .build();
+        // Registering types can reduce class name serialization overhead, but not mandatory.
+        // If secure mode enabled, all custom types must be registered.
+        byte[] bytes = fury.serialize("hi");
+        System.out.println(Arrays.toString(bytes));
+        System.out.println(fury.deserialize(bytes));
+    }
+}

@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+application {
+    mainClass = 'net.vansen.noksdb.test.LocalSQLVsNoksDB'
+    applicationDefaultJvmArgs = ['-XX:+UseZGC', '-Xmx16g']
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
+    implementation 'org.jetbrains:annotations:26.0.1'
+    implementation 'it.unimi.dsi:fastutil:8.5.15'
+    implementation 'io.activej:activej-serializer:6.0-rc2'
+    testImplementation 'org.slf4j:slf4j-simple:2.0.16'
+    implementation 'org.apache.fury:fury-core:0.9.0'
+    implementation 'de.ruedigermoeller:fst:3.0.1'
+    implementation 'com.esotericsoftware:kryo:5.6.2'
+    implementation 'org.xerial:sqlite-jdbc:3.41.2.2'
+    implementation 'com.h2database:h2:2.2.220'
+    implementation 'org.b1.pack:lzma-sdk-4j:9.22.0'
+    implementation 'com.github.luben:zstd-jni:1.5.6-9'
+    implementation 'org.lz4:lz4-java:1.8.0'
+    implementation 'com.koloboke:koloboke-impl-common-jdk8:1.0.0'
+    implementation 'commons-collections:commons-collections:2.1.1'
+    implementation 'org.rocksdb:rocksdbjni:8.0.0'
+    implementation 'org.apache.derby:derby:10.16.1.1'
+    implementation 'org.lmdbjava:lmdbjava:0.9.0'
+    implementation 'com.google.guava:guava:33.4.0-jre'
+}
+
+test {
+    useJUnitPlatform()
+}
