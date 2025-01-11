@@ -1,4 +1,4 @@
-package net.vansen.noksdb.test;
+package net.vansen.noksdb.test.comparsions;
 
 import org.apache.fury.Fury;
 import org.nustaq.serialization.FSTConfiguration;

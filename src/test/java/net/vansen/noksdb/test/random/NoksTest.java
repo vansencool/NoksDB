@@ -1,4 +1,4 @@
-package net.vansen.noksdb.test;
+package net.vansen.noksdb.test.random;
 
 import it.unimi.dsi.fastutil.objects.*;
 import org.junit.jupiter.api.Test;

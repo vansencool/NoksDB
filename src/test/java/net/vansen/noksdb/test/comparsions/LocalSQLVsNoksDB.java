@@ -1,4 +1,4 @@
-package net.vansen.noksdb.test;
+package net.vansen.noksdb.test.comparsions;
 
 import net.vansen.noksdb.NoksDBMap;
 import org.rocksdb.RocksDB;
