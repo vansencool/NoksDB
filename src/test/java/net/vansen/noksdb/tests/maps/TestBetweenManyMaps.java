@@ -3,10 +3,11 @@ package net.vansen.noksdb.tests.maps;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+@SuppressWarnings("all")
 public class TestBetweenManyMaps {
 
-    private static final int NUM_TESTS = 1000000;
-    private static final int NUM_ITERATIONS = 1000;
+    private static final int NUM_TESTS = 1000;
+    private static final int NUM_ITERATIONS = 100;
 
     public static void main(String[] args) {
         long[] hashMapPutTimes = new long[NUM_TESTS];
@@ -113,11 +114,9 @@ public class TestBetweenManyMaps {
                 calculateResults("ConcurrentSkipListMap", concurrentSkipListMapGetTimes),*/
         };
 
-        // Sort results for ranking
         Arrays.sort(putResults, Comparator.comparingDouble(r -> r.averageMs));
         Arrays.sort(getResults, Comparator.comparingDouble(r -> r.averageMs));
 
-        // Print results
         System.out.println("PUT Benchmark Results:");
         System.out.printf("%-20s %-12s %-12s %-18s %-18s\n", "Map Type", "Avg Time (ms)", "Avg Time (ns)", "Time/Iter (ms)", "Time/Iter (ns)");
         System.out.println("=".repeat(80));

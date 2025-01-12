@@ -1,6 +1,11 @@
 package net.vansen.noksdb.collection;
 
+import com.google.common.collect.Iterators;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.stream.Stream;
 
 /**
  * An ArrayList that can grow dynamically.
@@ -14,7 +19,7 @@ import java.util.Arrays;
  * @param <T> the type of the elements
  */
 @SuppressWarnings({"unused", "unchecked"})
-public class DynamicObjectArrayList<T> {
+public class DynamicObjectArrayList<T> implements Iterable<T> {
     private Object[] elements;
     private int size;
 
@@ -80,8 +85,26 @@ public class DynamicObjectArrayList<T> {
         return size == 0;
     }
 
+    public T[] toArray() {
+        return (T[]) elements;
+    }
+
+    public Stream<T> stream() {
+        return Arrays.stream(toArray());
+    }
+
+    public Stream<T> parallelStream() {
+        return Arrays.stream(toArray()).parallel();
+    }
+
     @Override
     public String toString() {
         return Arrays.toString(Arrays.copyOf(elements, size));
+    }
+
+    @NotNull
+    @Override
+    public Iterator<T> iterator() {
+        return Iterators.forArray(toArray());
     }
 }

@@ -1,0 +1,111 @@
+Information:
+  Physical Cores: 8
+  Logical Cores: 16
+  Allocated Memory: 13312 MB
+  Max Memory: 32678 MB
+  CPU Model: AMD Ryzen 7 3700X 8-Core Processor             
+  Memory type: DDR4
+  Operating System: Windows
+
+Compression Algorithm: NoCompression
+
+Original Size: 10022 bytes -> Compressed Size: 10022 bytes
+Compression Time: 0.001 ms
+Decompression Time: 0.001 ms
+Compression Ratio: 1.000
+Decompressed length (bytes): 10022
+Data Integrity: PASS
+
+NoksDB Compression Benchmarks:
+Iterations: 1 | Save Time: 3.906 ms | Load Time: 3.873 ms
+Iterations: 10 | Save Time: 0.846 ms | Load Time: 1.949 ms
+Iterations: 100 | Save Time: 2.001 ms | Load Time: 3.146 ms
+Iterations: 1000 | Save Time: 4.732 ms | Load Time: 6.467 ms
+Iterations: 10000 | Save Time: 11.068 ms | Load Time: 15.678 ms
+Iterations: 100000 | Save Time: 31.233 ms | Load Time: 64.383 ms
+
+Compression Algorithm: LZ4Compression
+
+Original Size: 10022 bytes -> Compressed Size: 86 bytes
+Compression Time: 30.467 ms
+Decompression Time: 59.564 ms
+Compression Ratio: 0.009
+Decompressed length (bytes): 10022
+Data Integrity: PASS
+
+NoksDB Compression Benchmarks:
+Iterations: 1 | Save Time: 2.959 ms | Load Time: 2.277 ms
+Iterations: 10 | Save Time: 3.790 ms | Load Time: 2.674 ms
+Iterations: 100 | Save Time: 11.374 ms | Load Time: 3.420 ms
+Iterations: 1000 | Save Time: 228.989 ms | Load Time: 6.659 ms
+Iterations: 10000 | Save Time: 8536.579 ms | Load Time: 57.582 ms
+Iterations: 100000 | Save Time: 73097.159 ms | Load Time: 76.363 ms
+
+Compression Algorithm: LZMACompression
+
+Original Size: 10022 bytes -> Compressed Size: 86 bytes
+Compression Time: 52.965 ms
+Decompression Time: 5.462 ms
+Compression Ratio: 0.009
+Decompressed length (bytes): 10022
+Data Integrity: PASS
+
+NoksDB Compression Benchmarks:
+Iterations: 1 | Save Time: 42.772 ms | Load Time: 6.795 ms
+Iterations: 10 | Save Time: 44.806 ms | Load Time: 6.579 ms
+Iterations: 100 | Save Time: 53.230 ms | Load Time: 7.894 ms
+Iterations: 1000 | Save Time: 119.241 ms | Load Time: 9.233 ms
+Iterations: 10000 | Save Time: 203.782 ms | Load Time: 23.036 ms
+Iterations: 100000 | Save Time: 1875.048 ms | Load Time: 87.788 ms
+
+Compression Algorithm: SnappyCompression
+
+Original Size: 10022 bytes -> Compressed Size: 498 bytes
+Compression Time: 54.967 ms
+Decompression Time: 0.063 ms
+Compression Ratio: 0.050
+Decompressed length (bytes): 10022
+Data Integrity: PASS
+
+NoksDB Compression Benchmarks:
+Iterations: 1 | Save Time: 0.657 ms | Load Time: 1.174 ms
+Iterations: 10 | Save Time: 0.528 ms | Load Time: 1.179 ms
+Iterations: 100 | Save Time: 0.602 ms | Load Time: 0.894 ms
+Iterations: 1000 | Save Time: 0.755 ms | Load Time: 1.557 ms
+Iterations: 10000 | Save Time: 3.297 ms | Load Time: 4.559 ms
+Iterations: 100000 | Save Time: 31.611 ms | Load Time: 32.917 ms
+
+Compression Algorithm: GzipCompression
+
+Original Size: 10022 bytes -> Compressed Size: 73 bytes
+Compression Time: 2.062 ms
+Decompression Time: 0.462 ms
+Compression Ratio: 0.007
+Decompressed length (bytes): 10022
+Data Integrity: PASS
+
+NoksDB Compression Benchmarks:
+Iterations: 1 | Save Time: 0.697 ms | Load Time: 1.488 ms
+Iterations: 10 | Save Time: 0.672 ms | Load Time: 1.439 ms
+Iterations: 100 | Save Time: 0.813 ms | Load Time: 1.272 ms
+Iterations: 1000 | Save Time: 1.932 ms | Load Time: 1.469 ms
+Iterations: 10000 | Save Time: 12.612 ms | Load Time: 4.334 ms
+Iterations: 100000 | Save Time: 118.751 ms | Load Time: 38.903 ms
+
+Compression Algorithm: DeflateCompression
+
+Original Size: 10022 bytes -> Compressed Size: 61 bytes
+Compression Time: 0.582 ms
+Decompression Time: 0.080 ms
+Compression Ratio: 0.006
+Decompressed length (bytes): 10022
+Data Integrity: PASS
+
+NoksDB Compression Benchmarks:
+Iterations: 1 | Save Time: 0.607 ms | Load Time: 0.935 ms
+Iterations: 10 | Save Time: 0.478 ms | Load Time: 0.880 ms
+Iterations: 100 | Save Time: 0.562 ms | Load Time: 0.879 ms
+Iterations: 1000 | Save Time: 4.601 ms | Load Time: 1.602 ms
+Iterations: 10000 | Save Time: 67.411 ms | Load Time: 4.428 ms
+Iterations: 100000 | Save Time: 471.245 ms | Load Time: 38.185 ms
+

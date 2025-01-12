@@ -16,7 +16,7 @@ public class EnsureWorksTest {
     @Test
     public static void testPutAndGet() {
         File dbFile = new File("noksdb.dat");
-        NoksDB db = new NoksDB.Builder()
+        NoksDB db = NoksDB.builder()
                 .storageFile(dbFile)
                 .autoSave(false)
                 .build();

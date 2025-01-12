@@ -1,11 +1,5 @@
 plugins {
     id 'java'
-    id 'application'
-}
-
-application {
-    mainClass = 'net.vansen.noksdb.tests.LocalSQLVsNoksDB'
-    applicationDefaultJvmArgs = ['-XX:+UseZGC', '-Xmx16g']
 }
 
 group = 'org.example'
@@ -16,28 +10,21 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.jetbrains:annotations:26.0.1'
+    implementation 'org.apache.fury:fury-core:0.9.0'
+    compileOnly 'org.lz4:lz4-java:1.8.0'
+    compileOnly 'org.xerial.snappy:snappy-java:1.1.10.7'
+    compileOnly 'org.apache.commons:commons-compress:1.27.1'
+    compileOnly 'org.tukaani:xz:1.10'
+    compileOnly 'com.github.oshi:oshi-core:6.6.5'
+    testImplementation 'com.github.oshi:oshi-core:6.6.5'
+    testImplementation 'org.tukaani:xz:1.10'
+    testImplementation 'org.apache.commons:commons-compress:1.27.1'
+    testImplementation 'org.xerial.snappy:snappy-java:1.1.10.7'
+    testImplementation 'org.lz4:lz4-java:1.8.0'
+    testImplementation 'org.slf4j:slf4j-simple:2.0.16'
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
-    implementation 'org.jetbrains:annotations:26.0.1'
-    implementation 'it.unimi.dsi:fastutil:8.5.15'
-    implementation 'io.activej:activej-serializer:6.0-rc2'
-    testImplementation 'org.slf4j:slf4j-simple:2.0.16'
-    implementation 'org.apache.fury:fury-core:0.9.0'
-    implementation 'de.ruedigermoeller:fst:3.0.1'
-    implementation 'com.esotericsoftware:kryo:5.6.2'
-    implementation 'org.xerial:sqlite-jdbc:3.41.2.2'
-    implementation 'com.h2database:h2:2.2.220'
-    implementation 'org.b1.pack:lzma-sdk-4j:9.22.0'
-    implementation 'com.github.luben:zstd-jni:1.5.6-9'
-    implementation 'org.lz4:lz4-java:1.8.0'
-    implementation 'com.koloboke:koloboke-impl-common-jdk8:1.0.0'
-    implementation 'commons-collections:commons-collections:2.1.1'
-    implementation 'org.rocksdb:rocksdbjni:8.0.0'
-    implementation 'org.apache.derby:derby:10.16.1.1'
-    implementation 'org.lmdbjava:lmdbjava:0.9.0'
-    implementation 'com.google.guava:guava:33.4.0-jre'
-    implementation 'org.agrona:agrona:2.0.0'
 }
 
 test {

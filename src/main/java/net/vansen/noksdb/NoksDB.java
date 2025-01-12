@@ -1,25 +1,30 @@
 package net.vansen.noksdb;
 
+import net.vansen.noksdb.bulk.BulkBuilder;
 import net.vansen.noksdb.compression.Compression;
+import net.vansen.noksdb.entry.RowBuilder;
+import net.vansen.noksdb.entry.UpdateBuilder;
+import net.vansen.noksdb.fetch.FetchBuilder;
+import net.vansen.noksdb.setup.NoksDBSetup;
 import org.apache.fury.Fury;
 import org.apache.fury.ThreadSafeFury;
 import org.apache.fury.config.CompatibleMode;
 import org.apache.fury.config.FuryBuilder;
 import org.apache.fury.config.Language;
+import org.apache.fury.logging.LoggerFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
-@SuppressWarnings({"unused", "unchecked"})
+/**
+ * A lightweight, thread-safe key-value database with support for compression and auto-saving.
+ */
+@SuppressWarnings({"unused", "unchecked", "UnusedReturnValue", "ResultOfMethodCallIgnored"})
 public class NoksDB {
+
     private final File storageFile;
     private Map<String, Map<String, Object>> store = new ConcurrentHashMap<>();
     private final ThreadSafeFury serializer;
@@ -28,88 +33,236 @@ public class NoksDB {
     private final boolean autoSaveAsync;
     private final ExecutorService executor;
 
-    private NoksDB(NoksDB.Builder builder) {
+    /**
+     * Creates a new instance of the NoksDB database.
+     *
+     * @param builder A {@link NoksDBSetup} object containing the configuration for the database.
+     */
+    public NoksDB(@NotNull NoksDBSetup builder) {
         this.storageFile = builder.storageFile;
         this.autoSave = builder.autoSave;
         this.autoSaveAsync = builder.autoSaveAsync;
         this.executor = builder.executor != null ? builder.executor : Executors.newFixedThreadPool(4);
+        LoggerFactory.disableLogging();
         FuryBuilder fury = Fury.builder()
                 .withLanguage(Language.JAVA)
                 .withCompatibleMode(CompatibleMode.COMPATIBLE);
-        this.compressor = builder.compressor;
         this.serializer = fury.buildThreadSafeFury();
+        this.compressor = builder.compressor;
         loadDatabase();
     }
 
-    public static NoksDB.Builder builder() {
-        return new NoksDB.Builder();
+    /**
+     * Starts building a new NoksDB database instance with the default setup.
+     *
+     * @return A new {@link NoksDBSetup} object for configuring the database.
+     */
+    public static NoksDBSetup builder() {
+        return new NoksDBSetup();
     }
 
-    public NoksDB.RowBuilder rowOf(@NotNull String key) {
+    /**
+     * Creates a new row for the specified key.
+     *
+     * @param key The key to associate with the row.
+     * @return A {@link RowBuilder} object to add values to the row.
+     */
+    public RowBuilder rowOf(@NotNull String key) {
         return new RowBuilder(this, key);
     }
 
-    public NoksDB.FetchBuilder fetch(@NotNull String key) {
+    /**
+     * Fetches an existing row by its key.
+     *
+     * @param key The key of the row to fetch.
+     * @return A {@link FetchBuilder} object to retrieve data from the row.
+     */
+    public FetchBuilder fetch(@NotNull String key) {
         return new FetchBuilder(this, key);
     }
 
-    public NoksDB.BulkBuilder bulk() {
+    /**
+     * Starts a bulk operation for adding or removing multiple rows at once.
+     *
+     * @return A {@link BulkBuilder} object for performing bulk operations.
+     */
+    public BulkBuilder bulk() {
         return new BulkBuilder(this);
     }
 
-    public NoksDB.UpdateBuilder update(@NotNull String key) {
+    /**
+     * Updates an existing row by its key.
+     *
+     * @param key The key of the row to update.
+     * @return An {@link UpdateBuilder} object to modify the row's values.
+     */
+    public UpdateBuilder update(@NotNull String key) {
         return new UpdateBuilder(this, key);
     }
 
+    /**
+     * Deletes a row from the database.
+     *
+     * @param key The key of the row to delete.
+     */
     public void delete(@NotNull String key) {
         store.remove(key);
-        if (autoSave) triggerSave();
+        triggerSave();
     }
 
+    /**
+     * Deletes a row asynchronously.
+     *
+     * @param key The key of the row to delete.
+     * @return A {@link CompletableFuture} representing the asynchronous operation.
+     */
     public CompletableFuture<Void> deleteAsync(@NotNull String key) {
         return CompletableFuture.runAsync(() -> delete(key), executor);
     }
 
+    /**
+     * Deletes a specific field within a row.
+     *
+     * @param key   The key of the row containing the field.
+     * @param field The name of the field to delete.
+     */
+    public void deleteField(@NotNull String key, @NotNull String field) {
+        store.get(key).remove(field);
+        triggerSave();
+    }
+
+    /**
+     * Deletes a specific field asynchronously.
+     *
+     * @param key   The key of the row containing the field.
+     * @param field The name of the field to delete.
+     * @return A {@link CompletableFuture} representing the asynchronous operation.
+     */
+    public CompletableFuture<Void> deleteFieldAsync(@NotNull String key, @NotNull String field) {
+        return CompletableFuture.runAsync(() -> deleteField(key, field), executor);
+    }
+
+    /**
+     * Saves the database to the file.
+     */
     public void save() {
         saveDatabase();
     }
 
+    /**
+     * Saves the database asynchronously.
+     *
+     * @return A {@link CompletableFuture} representing the asynchronous operation.
+     */
     public CompletableFuture<Void> saveAsync() {
         return CompletableFuture.runAsync(this::saveDatabase, executor);
     }
 
+    /**
+     * Checks if a row exists in the database.
+     *
+     * @param key The key of the row to check.
+     * @return True if the row exists, otherwise false.
+     */
     public boolean exists(@NotNull String key) {
         return store.containsKey(key);
     }
 
+    /**
+     * Counts the total number of rows in the database.
+     *
+     * @return The total number of rows.
+     */
     public long count() {
         return store.size();
     }
 
+    /**
+     * Clears all rows from the database.
+     */
+    public void clear() {
+        store.clear();
+    }
+
+    /**
+     * Clears the database and immediately saves it to the file.
+     */
+    public void clearAndSave() {
+        clear();
+        save();
+    }
+
+    /**
+     * Adds multiple rows to the database in bulk.
+     *
+     * @param entries A map of keys and their associated row data to add.
+     */
     public void bulkAdd(Map<String, Map<String, Object>> entries) {
         entries.entrySet().parallelStream().forEach(entry -> store.put(entry.getKey(), entry.getValue()));
-        if (autoSave) triggerSave();
+        triggerSave();
     }
 
+    /**
+     * Removes multiple rows from the database in bulk.
+     *
+     * @param keys A set of keys to remove.
+     */
     public void bulkRemove(Set<String> keys) {
         keys.parallelStream().forEach(store::remove);
-        if (autoSave) triggerSave();
+        triggerSave();
     }
 
+    /**
+     * Retrieves the internal store of the database.
+     *
+     * @return The map representing the database's rows and their data.
+     */
+    public ConcurrentHashMap<String, Map<String, Object>> store() {
+        return (ConcurrentHashMap<String, Map<String, Object>>) store;
+    }
+
+    /**
+     * Retrieves the executor service used for asynchronous tasks.
+     *
+     * @return The {@link ExecutorService} used by the database.
+     */
+    public Executor executor() {
+        return executor;
+    }
+
+    /**
+     * Adds multiple rows to the database asynchronously in bulk.
+     *
+     * @param entries A map of keys and their associated row data to add.
+     * @return A {@link CompletableFuture} representing the asynchronous operation.
+     */
     public CompletableFuture<Void> bulkAddAsync(Map<String, Map<String, Object>> entries) {
         return CompletableFuture.runAsync(() -> bulkAdd(entries), executor);
     }
 
+    /**
+     * Removes multiple rows from the database asynchronously in bulk.
+     *
+     * @param keys A set of keys to remove.
+     * @return A {@link CompletableFuture} representing the asynchronous operation.
+     */
     public CompletableFuture<Void> bulkRemoveAsync(Set<String> keys) {
         return CompletableFuture.runAsync(() -> bulkRemove(keys), executor);
     }
 
+    /**
+     * Closes the database and shuts down the executor.
+     */
     public void close() {
         executor.shutdown();
         setNullAndGc();
     }
 
-    private void triggerSave() {
+    /**
+     * Triggers a save operation if auto-save is enabled.
+     */
+    public void triggerSave() {
+        if (!autoSave) return;
         if (autoSaveAsync) {
             saveAsync();
         } else {
@@ -117,7 +270,17 @@ public class NoksDB {
         }
     }
 
+    /**
+     * Clears the internal store and triggers garbage collection.
+     */
+    public void setNullAndGc() {
+        store.clear();
+        store = null;
+        System.gc();
+    }
+
     private void saveDatabase() {
+        if (!storageFile.exists()) storageFile.getParentFile().mkdirs();
         try {
             if (compressor != null) {
                 try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(storageFile))) {
@@ -164,181 +327,6 @@ public class NoksDB {
             }
         } catch (IOException e) {
             throw new RuntimeException("Failed to load database", e);
-        }
-    }
-
-    public void setNullAndGc() {
-        store.clear();
-        store = null;
-        System.gc();
-    }
-
-    public static class Builder {
-        private File storageFile = new File("noksdb.dat");
-        private boolean autoSave = true;
-        private boolean autoSaveAsync = false;
-        private Compression compressor;
-        private ExecutorService executor;
-
-        public NoksDB.Builder storageFile(@NotNull File file) {
-            this.storageFile = file;
-            return this;
-        }
-
-        public NoksDB.Builder autoSave(boolean autoSave) {
-            this.autoSave = autoSave;
-            return this;
-        }
-
-        public NoksDB.Builder autoSaveAsync(boolean autoSaveAsync) {
-            this.autoSaveAsync = autoSaveAsync;
-            return this;
-        }
-
-        public NoksDB.Builder executor(@NotNull ExecutorService executor) {
-            this.executor = executor;
-            return this;
-        }
-
-        public NoksDB.Builder compression(Compression compressor) {
-            this.compressor = compressor;
-            return this;
-        }
-
-        public NoksDB build() {
-            return new NoksDB(this);
-        }
-    }
-
-    public static class RowBuilder {
-        private final NoksDB db;
-        private final String key;
-        private final Map<String, Object> values = new ConcurrentHashMap<>();
-
-        public RowBuilder(@NotNull NoksDB db, @NotNull String key) {
-            this.db = db;
-            this.key = key;
-        }
-
-        public NoksDB.RowBuilder value(@NotNull String field, @NotNull Object value) {
-            values.put(field, value);
-            return this;
-        }
-
-        public void insert() {
-            db.store.put(key, values);
-            if (db.autoSave) db.triggerSave();
-        }
-
-        public CompletableFuture<Void> insertAsync() {
-            return CompletableFuture.runAsync(this::insert, db.executor);
-        }
-    }
-
-    public static class FetchBuilder {
-        private final NoksDB db;
-        private final String key;
-        private String field;
-
-        public FetchBuilder(@NotNull NoksDB db, @NotNull String key) {
-            this.db = db;
-            this.key = key;
-        }
-
-        public NoksDB.FetchBuilder field(@NotNull String field) {
-            this.field = field;
-            return this;
-        }
-
-        public Object get() {
-            Map<String, Object> record = db.store.get(key);
-            if (record == null) return null;
-            return field != null ? record.get(field) : record;
-        }
-
-        public CompletableFuture<Object> getAsync() {
-            return CompletableFuture.supplyAsync(this::get, db.executor);
-        }
-    }
-
-    public static class UpdateBuilder {
-        private final NoksDB db;
-        private final String key;
-        private final Map<String, Object> values = new ConcurrentHashMap<>();
-
-        public UpdateBuilder(@NotNull NoksDB db, @NotNull String key) {
-            this.db = db;
-            this.key = key;
-        }
-
-        public NoksDB.UpdateBuilder value(@NotNull String field, @NotNull Object value) {
-            values.put(field, value);
-            return this;
-        }
-
-        public void apply() {
-            db.store.merge(key, values, (existing, newValues) -> {
-                existing.putAll(newValues);
-                return existing;
-            });
-            if (db.autoSave) db.triggerSave();
-        }
-
-        public CompletableFuture<Void> applyAsync() {
-            return CompletableFuture.runAsync(this::apply, db.executor);
-        }
-    }
-
-    public static class BulkBuilder {
-        private final NoksDB db;
-        private final List<Runnable> operations = new ArrayList<>();
-
-        public BulkBuilder(@NotNull NoksDB db) {
-            this.db = db;
-        }
-
-        public BulkBuilder add(@NotNull String key, @NotNull Map<String, Object> values) {
-            operations.add(() -> db.store.put(key, new ConcurrentHashMap<>(values)));
-            return this;
-        }
-
-        public BulkBuilder update(@NotNull String key, @NotNull String field, @NotNull Object value) {
-            operations.add(() -> db.store.merge(key, Map.of(field, value), (existing, incoming) -> {
-                existing.put(field, value);
-                return existing;
-            }));
-            return this;
-        }
-
-        public BulkBuilder update(@NotNull String key, @NotNull Map<String, Object> newValues) {
-            operations.add(() -> db.store.merge(key, newValues, (existing, incoming) -> {
-                existing.putAll(incoming);
-                return existing;
-            }));
-            return this;
-        }
-
-        public BulkBuilder delete(@NotNull String key) {
-            operations.add(() -> db.store.remove(key));
-            return this;
-        }
-
-        public BulkBuilder deleteWhere(@NotNull String field, @NotNull Object value) {
-            operations.add(() -> db.store.entrySet().removeIf(entry -> {
-                Map<String, Object> record = entry.getValue();
-                return record != null && value.equals(record.get(field));
-            }));
-            return this;
-        }
-
-        public void execute() {
-            operations.parallelStream()
-                    .forEach(Runnable::run);
-            if (db.autoSave) db.triggerSave();
-        }
-
-        public CompletableFuture<Void> executeAsync() {
-            return CompletableFuture.runAsync(this::execute, db.executor);
         }
     }
 }

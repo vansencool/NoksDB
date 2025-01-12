@@ -1,5 +1,7 @@
 package net.vansen.noksdb.compression;
 
+import java.io.IOException;
+
 /**
  * Interface for compression algorithms used in NoksDB.
  * <p>
@@ -17,7 +19,7 @@ public interface Compression {
      * @param data the byte array to compress
      * @return the compressed byte array
      */
-    byte[] compress(byte[] data);
+    byte[] compress(byte[] data) throws IOException;
 
     /**
      * Decompresses the given byte array.
@@ -25,10 +27,10 @@ public interface Compression {
      * The length parameter is required for compression algorithms that need to know the original size of the data, such as ZSTD and LZ4, so it's here for convenience.
      *
      * @param data   the compressed byte array
-     * @param length the original size of the byte array before compression, MAY be 0 if writeLength() returns false
+     * @param length the original size of the byte array before compression, will be 0 if writeLength() returns false
      * @return the decompressed byte array
      */
-    byte[] decompress(byte[] data, int length);
+    byte[] decompress(byte[] data, int length) throws IOException;
 
     /**
      * Returns true if the compression algorithm needs to know the original size of the data, such as ZSTD and LZ4.
