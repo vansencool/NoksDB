@@ -1,4 +1,4 @@
-package net.vansen.noksdb.tests.compression;
+package net.vansen.noksdb.testing.compression;
 
 import net.vansen.noksdb.NoksDB;
 import net.vansen.noksdb.compression.Compression;
@@ -15,7 +15,6 @@ public class CompressionTest {
     public static void main(String[] args) throws IOException {
         List<Compression> compressors = List.of(
                 new NoCompression(), // No compression, bare test
-                new LZ4Compression(), // Worst performance, not recommended at all
                 new LZMACompression(), // Second-best compression, little bad performance
                 new SnappyCompression(), // Fastest, half size as none,but basically same speed as none (1 ms difference in 100k iterations)
                 new GzipCompression(), // Slower than Snappy about 4x, very good compression

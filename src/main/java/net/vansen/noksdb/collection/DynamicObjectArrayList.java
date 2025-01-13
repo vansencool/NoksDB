@@ -51,18 +51,8 @@ public class DynamicObjectArrayList<T> implements Iterable<T> {
     }
 
     /**
-     * Adds an element at the given index.
-     * <p>
-     * This is faster than the other add method, but is highly NOT recommended to use, as it does not check for capacity.
-     *
-     * @param index the index to add the element at
-     * @param value the element to add
+     * Index must be less than size, or size may not work correctly
      */
-    public void addFaster(int index, T value) {
-        elements[index] = value;
-        size = Math.max(size, index + 1);
-    }
-
     public void set(int index, T value) {
         elements[index] = value;
     }

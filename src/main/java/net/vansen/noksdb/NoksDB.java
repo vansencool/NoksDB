@@ -2,6 +2,7 @@ package net.vansen.noksdb;
 
 import net.vansen.noksdb.bulk.BulkBuilder;
 import net.vansen.noksdb.compression.Compression;
+import net.vansen.noksdb.database.DatabaseManager;
 import net.vansen.noksdb.entry.RowBuilder;
 import net.vansen.noksdb.entry.UpdateBuilder;
 import net.vansen.noksdb.fetch.FetchBuilder;
@@ -14,7 +15,7 @@ import org.apache.fury.config.Language;
 import org.apache.fury.logging.LoggerFactory;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.File;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.*;
@@ -22,7 +23,7 @@ import java.util.concurrent.*;
 /**
  * A lightweight, thread-safe key-value database with support for compression and auto-saving.
  */
-@SuppressWarnings({"unused", "unchecked", "UnusedReturnValue", "ResultOfMethodCallIgnored"})
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class NoksDB {
 
     private final File storageFile;
@@ -32,6 +33,7 @@ public class NoksDB {
     private final boolean autoSave;
     private final boolean autoSaveAsync;
     private final ExecutorService executor;
+    private final DatabaseManager databaseManager;
 
     /**
      * Creates a new instance of the NoksDB database.
@@ -49,7 +51,8 @@ public class NoksDB {
                 .withCompatibleMode(CompatibleMode.COMPATIBLE);
         this.serializer = fury.buildThreadSafeFury();
         this.compressor = builder.compressor;
-        loadDatabase();
+        this.databaseManager = builder.databaseManager;
+        databaseManager.load(storageFile, compressor, serializer, (ConcurrentHashMap<String, Map<String, Object>>) store);
     }
 
     /**
@@ -146,7 +149,7 @@ public class NoksDB {
      * Saves the database to the file.
      */
     public void save() {
-        saveDatabase();
+        databaseManager.save(storageFile, compressor, serializer, (ConcurrentHashMap<String, Map<String, Object>>) store);
     }
 
     /**
@@ -155,7 +158,7 @@ public class NoksDB {
      * @return A {@link CompletableFuture} representing the asynchronous operation.
      */
     public CompletableFuture<Void> saveAsync() {
-        return CompletableFuture.runAsync(this::saveDatabase, executor);
+        return CompletableFuture.runAsync(this::save, executor);
     }
 
     /**
@@ -277,56 +280,5 @@ public class NoksDB {
         store.clear();
         store = null;
         System.gc();
-    }
-
-    private void saveDatabase() {
-        if (!storageFile.exists()) storageFile.getParentFile().mkdirs();
-        try {
-            if (compressor != null) {
-                try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(storageFile))) {
-                    byte[] compressedData = compressor.compress(serializer.serialize(store));
-                    if (compressor.writeLength()) dos.writeInt(compressedData.length);
-                    dos.write(compressedData);
-                }
-                return;
-            }
-            try (FileOutputStream fos = new FileOutputStream(storageFile)) {
-                byte[] data = serializer.serialize(store);
-                fos.write(data);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to save database", e);
-        }
-    }
-
-    private void loadDatabase() {
-        if (!storageFile.exists()) return;
-        try {
-            if (compressor != null) {
-                if (!compressor.writeLength()) {
-                    try (FileInputStream fis = new FileInputStream(storageFile)) {
-                        byte[] data = fis.readAllBytes();
-                        if (data.length > 0) {
-                            byte[] decompressedData = compressor.decompress(data, data.length);
-                            store.putAll((Map<String, Map<String, Object>>) serializer.deserialize(decompressedData));
-                        }
-                    }
-                } else {
-                    try (DataInputStream dis = new DataInputStream(new FileInputStream(storageFile))) {
-                        int compressedLength = dis.readInt();
-                        byte[] compressedData = new byte[compressedLength];
-                        dis.readFully(compressedData);
-                        store.putAll((Map<String, Map<String, Object>>) serializer.deserialize(compressor.decompress(compressedData, compressedLength)));
-                    }
-                }
-            } else {
-                try (FileInputStream fis = new FileInputStream(storageFile)) {
-                    byte[] data = fis.readAllBytes();
-                    if (data.length > 0) store.putAll((Map<String, Map<String, Object>>) serializer.deserialize(data));
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load database", e);
-        }
     }
 }

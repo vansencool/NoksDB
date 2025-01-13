@@ -2,6 +2,9 @@ package net.vansen.noksdb.setup;
 
 import net.vansen.noksdb.NoksDB;
 import net.vansen.noksdb.compression.Compression;
+import net.vansen.noksdb.compression.CompressionBased;
+import net.vansen.noksdb.database.DatabaseManager;
+import net.vansen.noksdb.database.impl.DefaultDatabaseManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -17,7 +20,7 @@ public class NoksDBSetup {
      * The file used to store the database.
      * Default: "noksdb.dat".
      */
-    public File storageFile = new File("noksdb.dat");
+    public @NotNull File storageFile = new File("noksdb.dat");
 
     /**
      * Whether auto-saving is enabled. If true, the database is saved after every write.
@@ -33,15 +36,21 @@ public class NoksDBSetup {
 
     /**
      * The compression method to use for saving the database.
-     * Default: null (no compression).
+     * Default: Snappy or None if Snappy is not available.
      */
-    public Compression compressor;
+    public @NotNull Compression compressor = CompressionBased.snappyOrNone();
 
     /**
      * The executor service used for asynchronous tasks.
      * Default: null (creates a default executor if not provided).
      */
     public ExecutorService executor;
+
+    /**
+     * The database manager used to manage the database.
+     * Default: {@link DefaultDatabaseManager}.
+     */
+    public DatabaseManager databaseManager = new DefaultDatabaseManager();
 
     /**
      * Sets the file used to store the database.
@@ -92,8 +101,19 @@ public class NoksDBSetup {
      * @param compressor The compression method to use.
      * @return This {@link NoksDBSetup} instance.
      */
-    public NoksDBSetup compression(Compression compressor) {
+    public NoksDBSetup compression(@NotNull Compression compressor) {
         this.compressor = compressor;
+        return this;
+    }
+
+    /**
+     * Sets the database manager for managing the database.
+     *
+     * @param databaseManager The database manager to use.
+     * @return This {@link NoksDBSetup} instance.
+     */
+    public NoksDBSetup databaseManager(@NotNull DatabaseManager databaseManager) {
+        this.databaseManager = databaseManager;
         return this;
     }
 

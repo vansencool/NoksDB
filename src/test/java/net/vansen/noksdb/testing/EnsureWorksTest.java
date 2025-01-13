@@ -1,7 +1,6 @@
-package net.vansen.noksdb.tests;
+package net.vansen.noksdb.testing;
 
 import net.vansen.noksdb.NoksDB;
-import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
@@ -13,9 +12,8 @@ public class EnsureWorksTest {
         testPutAndGetDifferentObjects();
     }
 
-    @Test
     public static void testPutAndGet() {
-        File dbFile = new File("noksdb.dat");
+        File dbFile = new File("tests/works/noksdb.dat");
         NoksDB db = NoksDB.builder()
                 .storageFile(dbFile)
                 .autoSave(false)
@@ -39,9 +37,8 @@ public class EnsureWorksTest {
         System.out.println("Result: " + (retrievedValue.equals(value) ? "PASS" : "FAIL"));
     }
 
-    @Test
     public static void testSaveAndLoad() {
-        File dbFile = new File("noksdb.dat");
+        File dbFile = new File("tests/works/noksdb.dat");
         NoksDB db = NoksDB.builder()
                 .storageFile(dbFile)
                 .autoSave(false)
@@ -72,9 +69,8 @@ public class EnsureWorksTest {
         System.out.println("Result: " + (retrievedValue.equals(value) ? "PASS" : "FAIL"));
     }
 
-    @Test
     public static void testPutAndGetDifferentObjects() {
-        File dbFile = new File("noksdb.dat");
+        File dbFile = new File("tests/works/noksdb.dat");
         NoksDB db = NoksDB.builder()
                 .storageFile(dbFile)
                 .autoSave(false)

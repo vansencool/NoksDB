@@ -45,7 +45,7 @@ bin/
 **/*.dat
 
 ### Tests ###
-/test
+/tests
 /results
 **/*.jfr
 **/*.jfr.txt

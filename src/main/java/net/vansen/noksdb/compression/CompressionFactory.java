@@ -1,6 +1,9 @@
 package net.vansen.noksdb.compression;
 
-import net.vansen.noksdb.compression.impl.*;
+import net.vansen.noksdb.compression.impl.DeflateCompression;
+import net.vansen.noksdb.compression.impl.GzipCompression;
+import net.vansen.noksdb.compression.impl.LZMACompression;
+import net.vansen.noksdb.compression.impl.SnappyCompression;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -10,6 +13,8 @@ import java.util.zip.Deflater;
  * A factory class for creating and retrieving Compression instances.
  * <p>
  * Please do not use this without having the libraries for the compression algorithms loaded.
+ *
+ * @see CompressionBased
  */
 @SuppressWarnings("unused")
 public class CompressionFactory {
@@ -55,15 +60,6 @@ public class CompressionFactory {
      */
     public static Compression getLZMACompression() {
         return LZMACompression.instance();
-    }
-
-    /**
-     * Returns an instance of the LZ4 compression algorithm.
-     *
-     * @return an LZ4 Compression instance
-     */
-    public static Compression getLZ4Compression() {
-        return LZ4Compression.instance();
     }
 
     /**
