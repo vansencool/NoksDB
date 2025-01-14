@@ -1,9 +1,10 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 
-group = 'org.example'
-version = '1.0-SNAPSHOT'
+group = 'dev.vansen'
+version = '1.0.0-BETA'
 
 repositories {
     mavenCentral()
@@ -21,4 +22,30 @@ dependencies {
     testImplementation 'org.apache.commons:commons-compress:1.27.1'
     testImplementation 'org.xerial.snappy:snappy-java:1.1.10.7'
     testImplementation 'org.slf4j:slf4j-simple:2.0.16'
+}
+
+tasks.withType(Javadoc).configureEach {
+    source = sourceSets.main.allJava
+}
+
+tasks.register('sourcesJar', Jar) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+}
+
+tasks.register('javadocJar', Jar) {
+    archiveClassifier.set('javadoc')
+    from tasks.javadoc
+    dependsOn tasks.javadoc
+}
+
+publishing {
+    publications {
+        create("mavenJava", MavenPublication.class) {
+            from components.java
+
+            artifact tasks.sourcesJar
+            artifact tasks.javadocJar
+        }
+    }
 }
