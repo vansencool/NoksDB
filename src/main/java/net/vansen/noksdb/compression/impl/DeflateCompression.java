@@ -41,6 +41,8 @@ public class DeflateCompression implements Compression {
 
     /**
      * Creates a new instance of this class with the default compression level.
+     *
+     * @return a Deflate Compression instance
      */
     public static Compression instance() {
         return new DeflateCompression();
@@ -50,6 +52,7 @@ public class DeflateCompression implements Compression {
      * Creates a new instance of this class with the specified compression level.
      *
      * @param level the compression level to use (see {@link Deflater})
+     * @return a Deflate Compression instance
      */
     public static Compression instance(int level) {
         return new DeflateCompression(level);

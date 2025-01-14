@@ -9,6 +9,8 @@ public class NoCompression implements Compression {
 
     /**
      * Creates a new instance of this class.
+     *
+     * @return a NoCompression instance
      */
     public static Compression instance() {
         return new NoCompression();

@@ -18,6 +18,7 @@ public interface Compression {
      *
      * @param data the byte array to compress
      * @return the compressed byte array
+     * @throws IOException if an I/O error occurs
      */
     byte[] compress(byte[] data) throws IOException;
 
@@ -29,6 +30,7 @@ public interface Compression {
      * @param data   the compressed byte array
      * @param length the original size of the byte array before compression, will be 0 if writeLength() returns false
      * @return the decompressed byte array
+     * @throws IOException if an I/O error occurs
      */
     byte[] decompress(byte[] data, int length) throws IOException;
 

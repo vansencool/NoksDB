@@ -9,6 +9,9 @@ import java.io.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * A default implementation of the DatabaseManager interface.
+ */
 @SuppressWarnings({"unchecked", "ResultOfMethodCallIgnored"})
 public class DefaultDatabaseManager implements DatabaseManager {
 

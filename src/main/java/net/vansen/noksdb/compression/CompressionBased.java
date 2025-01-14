@@ -12,6 +12,8 @@ public class CompressionBased {
 
     /**
      * Creates a new instance of the SnappyCompression class if the Snappy library is available, or a NoCompression instance otherwise.
+     *
+     * @return a Compression instance, either SnappyCompression or NoCompression
      */
     public static Compression snappyOrNone() {
         try {
@@ -24,6 +26,8 @@ public class CompressionBased {
 
     /**
      * Creates a new instance of the LZMACompression class if the LZMA library is available, or a NoCompression instance otherwise.
+     *
+     * @return a Compression instance, either LZMACompression or NoCompression
      */
     public static Compression lzmaOrNone() {
         try {
