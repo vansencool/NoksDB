@@ -4,6 +4,10 @@ In-memory database, with similar features (and language) to SQL
 
 # Installation
 
+In-memory database, with similar features (and language) to SQL
+
+# Installation
+
 **Gradle**
 
 ```groovy
