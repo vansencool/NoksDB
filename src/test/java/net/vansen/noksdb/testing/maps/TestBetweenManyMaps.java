@@ -1,13 +1,16 @@
 package net.vansen.noksdb.testing.maps;
 
+
+import net.vansen.noksdb.maps.NoksMap;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("all")
 public class TestBetweenManyMaps {
 
-    private static final int NUM_TESTS = 1000;
-    private static final int NUM_ITERATIONS = 100;
+    private static final int NUM_TESTS = 10000;
+    private static final int NUM_ITERATIONS = 1;
 
     public static void main(String[] args) {
         long[] hashMapPutTimes = new long[NUM_TESTS];
@@ -16,6 +19,8 @@ public class TestBetweenManyMaps {
         long[] linkedHashMapGetTimes = new long[NUM_TESTS];
         long[] concurrentHashMapPutTimes = new long[NUM_TESTS];
         long[] concurrentHashMapGetTimes = new long[NUM_TESTS];
+        long[] customHashMapPutTimes = new long[NUM_TESTS];
+        long[] customHashMapGetTimes = new long[NUM_TESTS];
         /*long[] treeMapPutTimes = new long[NUM_TESTS];
         long[] treeMapGetTimes = new long[NUM_TESTS];
         long[] concurrentSkipListMapPutTimes = new long[NUM_TESTS];
@@ -66,6 +71,19 @@ public class TestBetweenManyMaps {
             }
             concurrentHashMapGetTimes[i] = System.nanoTime() - nano;
 
+            NoksMap customHashMap = new NoksMap();
+            nano = System.nanoTime();
+            for (int j = 0; j < NUM_ITERATIONS; j++) {
+                customHashMap.put("testing" + j, "testing" + j);
+            }
+            customHashMapPutTimes[i] = System.nanoTime() - nano;
+
+            nano = System.nanoTime();
+            for (int j = 0; j < NUM_ITERATIONS; j++) {
+                customHashMap.get("testing" + j);
+            }
+            customHashMapGetTimes[i] = System.nanoTime() - nano;
+
             /*
             // TreeMap
             Map<String, String> treeMap = new TreeMap<>();
@@ -101,7 +119,8 @@ public class TestBetweenManyMaps {
         BenchmarkResult[] putResults = {
                 calculateResults("HashMap", hashMapPutTimes),
                 calculateResults("LinkedHashMap", linkedHashMapPutTimes),
-                calculateResults("ConcurrentHashMap", concurrentHashMapPutTimes)/*,
+                calculateResults("ConcurrentHashMap", concurrentHashMapPutTimes),
+                calculateResults("NoksMap", customHashMapPutTimes)/*,
                 calculateResults("TreeMap", treeMapPutTimes),
                 calculateResults("ConcurrentSkipListMap", concurrentSkipListMapPutTimes),*/
         };
@@ -109,7 +128,8 @@ public class TestBetweenManyMaps {
         BenchmarkResult[] getResults = {
                 calculateResults("HashMap", hashMapGetTimes),
                 calculateResults("LinkedHashMap", linkedHashMapGetTimes),
-                calculateResults("ConcurrentHashMap", concurrentHashMapGetTimes)/*,
+                calculateResults("ConcurrentHashMap", concurrentHashMapGetTimes),
+                calculateResults("NoksMap", customHashMapGetTimes)/*,
                 calculateResults("TreeMap", treeMapGetTimes),
                 calculateResults("ConcurrentSkipListMap", concurrentSkipListMapGetTimes),*/
         };

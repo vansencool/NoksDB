@@ -42,6 +42,7 @@ public class RowBuilder {
 
     /**
      * Inserts the row into the database.
+     * <p>
      * Overwrites the row if it already exists.
      */
     public void insert() {
@@ -51,11 +52,29 @@ public class RowBuilder {
 
     /**
      * Inserts the row into the database asynchronously.
+     * <p>
      * Overwrites the row if it already exists.
      *
      * @return A {@link CompletableFuture} representing the asynchronous operation.
      */
     public CompletableFuture<Void> insertAsync() {
         return CompletableFuture.runAsync(this::insert, db.executor());
+    }
+
+    /**
+     * Inserts the row into the database if it doesn't already exist.
+     */
+    public void insertIfNotExists() {
+        db.store().putIfAbsent(key, values);
+        db.triggerSave();
+    }
+
+    /**
+     * Inserts the row into the database asynchronously if it doesn't already exist.
+     *
+     * @return A {@link CompletableFuture} representing the asynchronous operation.
+     */
+    public CompletableFuture<Void> insertIfNotExistsAsync() {
+        return CompletableFuture.runAsync(this::insertIfNotExists, db.executor());
     }
 }

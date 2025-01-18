@@ -31,7 +31,7 @@ public class BulkBuilder {
      * Adds a new row to the database.
      *
      * @param key    The key of the row to add.
-     * @param values A map of field names and values to associate with the row.
+     * @param values An object of field names and values to associate with the row.
      * @return This {@link BulkBuilder} instance.
      */
     public BulkBuilder add(@NotNull String key, @NotNull Map<String, Object> values) {
@@ -59,7 +59,7 @@ public class BulkBuilder {
      * Updates multiple fields in an existing row.
      *
      * @param key       The key of the row to update.
-     * @param newValues A map of new field names and values to update in the row.
+     * @param newValues An object of new field names and values to update in the row.
      * @return This {@link BulkBuilder} instance.
      */
     public BulkBuilder update(@NotNull String key, @NotNull Map<String, Object> newValues) {

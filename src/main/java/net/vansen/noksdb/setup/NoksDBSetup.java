@@ -5,6 +5,7 @@ import net.vansen.noksdb.compression.Compression;
 import net.vansen.noksdb.compression.CompressionBased;
 import net.vansen.noksdb.database.DatabaseManager;
 import net.vansen.noksdb.database.impl.DefaultDatabaseManager;
+import net.vansen.noksdb.maps.MapType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -16,41 +17,14 @@ import java.util.concurrent.ExecutorService;
 @SuppressWarnings("unused")
 public class NoksDBSetup {
 
-    /**
-     * The file used to store the database.
-     * Default: "noksdb.dat".
-     */
-    public @NotNull File storageFile = new File("noksdb.dat");
-
-    /**
-     * Whether auto-saving is enabled. If true, the database is saved after every write.
-     * Default: true.
-     */
-    public boolean autoSave = true;
-
-    /**
-     * Whether auto-saving should run asynchronously.
-     * Default: false.
-     */
-    public boolean autoSaveAsync = false;
-
-    /**
-     * The compression method to use for saving the database.
-     * Default: Snappy or None if Snappy is not available.
-     */
-    public @NotNull Compression compressor = CompressionBased.snappyOrNone();
-
-    /**
-     * The executor service used for asynchronous tasks.
-     * Default: null (creates a default executor if not provided).
-     */
-    public ExecutorService executor;
-
-    /**
-     * The database manager used to manage the database.
-     * Default: {@link DefaultDatabaseManager}.
-     */
-    public DatabaseManager databaseManager = new DefaultDatabaseManager();
+    private @NotNull File storageFile = new File("noksdb.dat");
+    private boolean autoSave = true;
+    private boolean autoSaveAsync = false;
+    private @NotNull Compression compressor = CompressionBased.snappyOrNone();
+    private boolean compressionBySerializer = false;
+    private ExecutorService executor;
+    private DatabaseManager databaseManager = new DefaultDatabaseManager();
+    private MapType mapType = MapType.NOKS_MAP;
 
     /**
      * Sets the file used to store the database.
@@ -79,8 +53,18 @@ public class NoksDBSetup {
      *
      * @return This {@link NoksDBSetup} instance.
      */
-    public NoksDBSetup autoSaveAsync() {
-        this.autoSaveAsync = true;
+    public NoksDBSetup autoSaveAsync(boolean autoSaveAsync) {
+        this.autoSaveAsync = autoSaveAsync;
+        return this;
+    }
+
+    /**
+     * Sets whether serializer (Fury) should compress strings and numbers.
+     *
+     * @return This {@link NoksDBSetup} instance.
+     */
+    public NoksDBSetup compressionBySerializer(boolean compressionBySerializer) {
+        this.compressionBySerializer = compressionBySerializer;
         return this;
     }
 
@@ -115,6 +99,83 @@ public class NoksDBSetup {
     public NoksDBSetup databaseManager(@NotNull DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
         return this;
+    }
+
+    public NoksDBSetup mapType(@NotNull MapType mapType) {
+        this.mapType = mapType;
+        return this;
+    }
+
+    /**
+     * Gets the compression method used for saving and loading the database.
+     *
+     * @return The compression method.
+     */
+    public Compression compression() {
+        return compressor;
+    }
+
+    /**
+     * Gets the executor service used for handling asynchronous tasks.
+     *
+     * @return The executor service.
+     */
+    public ExecutorService executor() {
+        return executor;
+    }
+
+    /**
+     * Gets the database manager used to manage the database.
+     *
+     * @return The database manager.
+     */
+    public DatabaseManager databaseManager() {
+        return databaseManager;
+    }
+
+    /**
+     * Gets the file used to store the database.
+     *
+     * @return The storage file.
+     */
+    public File storageFile() {
+        return storageFile;
+    }
+
+    /**
+     * Gets whether auto-saving is enabled.
+     *
+     * @return True if auto-saving is enabled, false otherwise.
+     */
+    public boolean autoSave() {
+        return autoSave;
+    }
+
+    /**
+     * Gets whether asynchronous auto-saving is enabled.
+     *
+     * @return True if asynchronous auto-saving is enabled, false otherwise.
+     */
+    public boolean autoSaveAsync() {
+        return autoSaveAsync;
+    }
+
+    /**
+     * Gets whether serializer (Fury) should compress strings and numbers.
+     *
+     * @return True if compression by serializer is enabled, false otherwise.
+     */
+    public boolean compressionBySerializer() {
+        return compressionBySerializer;
+    }
+
+    /**
+     * Gets the map type.
+     *
+     * @return The map type.
+     */
+    public MapType mapType() {
+        return mapType;
     }
 
     /**

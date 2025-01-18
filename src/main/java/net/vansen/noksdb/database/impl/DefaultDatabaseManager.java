@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A default implementation of the DatabaseManager interface.
@@ -16,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DefaultDatabaseManager implements DatabaseManager {
 
     @Override
-    public void load(@NotNull File file, @NotNull Compression compression, @NotNull ThreadSafeFury serializer, @NotNull ConcurrentHashMap<String, Map<String, Object>> store) {
+    public void load(@NotNull File file, @NotNull Compression compression, @NotNull ThreadSafeFury serializer, @NotNull Map<String, Map<String, Object>> store) {
         if (!file.exists()) return;
         try {
             if (!compression.writeLength()) {
@@ -41,7 +40,7 @@ public class DefaultDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void save(@NotNull File file, @NotNull Compression compression, @NotNull ThreadSafeFury serializer, @NotNull ConcurrentHashMap<String, Map<String, Object>> store) {
+    public void save(@NotNull File file, @NotNull Compression compression, @NotNull ThreadSafeFury serializer, @NotNull Map<String, Map<String, Object>> store) {
         if (!file.exists()) file.getParentFile().mkdirs();
         try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(file))) {
             byte[] compressedData = compression.compress(serializer.serialize(store));

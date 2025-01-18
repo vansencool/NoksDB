@@ -6,6 +6,8 @@ import net.vansen.noksdb.database.DatabaseManager;
 import net.vansen.noksdb.entry.RowBuilder;
 import net.vansen.noksdb.entry.UpdateBuilder;
 import net.vansen.noksdb.fetch.FetchBuilder;
+import net.vansen.noksdb.language.NQLInterpreter;
+import net.vansen.noksdb.maps.NoksMap;
 import net.vansen.noksdb.setup.NoksDBSetup;
 import org.apache.fury.Fury;
 import org.apache.fury.ThreadSafeFury;
@@ -16,6 +18,8 @@ import org.apache.fury.logging.LoggerFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.*;
@@ -27,7 +31,7 @@ import java.util.concurrent.*;
 public class NoksDB {
 
     private final File storageFile;
-    private Map<String, Map<String, Object>> store = new ConcurrentHashMap<>();
+    private Map<String, Map<String, Object>> store;
     private final ThreadSafeFury serializer;
     private final Compression compressor;
     private final boolean autoSave;
@@ -41,18 +45,26 @@ public class NoksDB {
      * @param builder A {@link NoksDBSetup} object containing the configuration for the database.
      */
     public NoksDB(@NotNull NoksDBSetup builder) {
-        this.storageFile = builder.storageFile;
-        this.autoSave = builder.autoSave;
-        this.autoSaveAsync = builder.autoSaveAsync;
-        this.executor = builder.executor != null ? builder.executor : Executors.newFixedThreadPool(4);
+        this.storageFile = builder.storageFile();
+        this.autoSave = builder.autoSave();
+        this.autoSaveAsync = builder.autoSaveAsync();
+        this.executor = builder.executor() != null ? builder.executor() : Executors.newFixedThreadPool(4);
         LoggerFactory.disableLogging();
         FuryBuilder fury = Fury.builder()
                 .withLanguage(Language.JAVA)
+                .withAsyncCompilation(true)
+                .withNumberCompressed(builder.compressionBySerializer())
+                .withStringCompressed(builder.compressionBySerializer())
                 .withCompatibleMode(CompatibleMode.COMPATIBLE);
         this.serializer = fury.buildThreadSafeFury();
-        this.compressor = builder.compressor;
-        this.databaseManager = builder.databaseManager;
-        databaseManager.load(storageFile, compressor, serializer, (ConcurrentHashMap<String, Map<String, Object>>) store);
+        this.compressor = builder.compression();
+        this.databaseManager = builder.databaseManager();
+        switch (builder.mapType()) {
+            case CONCURRENT_HASH_MAP -> this.store = new ConcurrentHashMap<>();
+            case NOKS_MAP -> this.store = new NoksMap<>();
+            case HASH_MAP -> this.store = new HashMap<>();
+        }
+        databaseManager.load(storageFile, compressor, serializer, store);
     }
 
     /**
@@ -124,6 +136,17 @@ public class NoksDB {
     }
 
     /**
+     * Returns an interpreter for NQL queries.
+     * NQL is a query language for NoksDB. Allowing SQL-like queries.
+     *
+     * @return An interpreter for NQL queries.
+     * @see NQLInterpreter
+     */
+    public NQLInterpreter nql() {
+        return new NQLInterpreter(this);
+    }
+
+    /**
      * Deletes a specific field within a row.
      *
      * @param key   The key of the row containing the field.
@@ -132,6 +155,17 @@ public class NoksDB {
     public void deleteField(@NotNull String key, @NotNull String field) {
         store.get(key).remove(field);
         triggerSave();
+    }
+
+    /**
+     * Checks if a field exists within a row.
+     *
+     * @param key   The key of the row containing the field.
+     * @param field The name of the field to check.
+     * @return True if the field exists, false otherwise.
+     */
+    public boolean existsField(@NotNull String key, @NotNull String field) {
+        return store.get(key).containsKey(field);
     }
 
     /**
@@ -149,7 +183,7 @@ public class NoksDB {
      * Saves the database to the file.
      */
     public void save() {
-        databaseManager.save(storageFile, compressor, serializer, (ConcurrentHashMap<String, Map<String, Object>>) store);
+        databaseManager.save(storageFile, compressor, serializer, store);
     }
 
     /**
@@ -198,7 +232,7 @@ public class NoksDB {
     /**
      * Adds multiple rows to the database in bulk.
      *
-     * @param entries A map of keys and their associated row data to add.
+     * @param entries An object of keys and their associated row data to add.
      */
     public void bulkAdd(Map<String, Map<String, Object>> entries) {
         entries.entrySet().parallelStream().forEach(entry -> store.put(entry.getKey(), entry.getValue()));
@@ -218,7 +252,7 @@ public class NoksDB {
     /**
      * Retrieves the internal store of the database.
      *
-     * @return The map representing the database's rows and their data.
+     * @return The object representing the database's rows and their data.
      */
     public ConcurrentHashMap<String, Map<String, Object>> store() {
         return (ConcurrentHashMap<String, Map<String, Object>>) store;
@@ -236,7 +270,7 @@ public class NoksDB {
     /**
      * Adds multiple rows to the database asynchronously in bulk.
      *
-     * @param entries A map of keys and their associated row data to add.
+     * @param entries An object of keys and their associated row data to add.
      * @return A {@link CompletableFuture} representing the asynchronous operation.
      */
     public CompletableFuture<Void> bulkAddAsync(Map<String, Map<String, Object>> entries) {
@@ -259,6 +293,33 @@ public class NoksDB {
     public void close() {
         executor.shutdown();
         setNullAndGc();
+    }
+
+    /**
+     * A set of all keys in the database.
+     *
+     * @return A set of keys.
+     */
+    public Set<String> keys() {
+        return store.keySet();
+    }
+
+    /**
+     * All values in the database.
+     *
+     * @return A collection of values in the database.
+     */
+    public Collection<Map<String, Object>> values() {
+        return store.values();
+    }
+
+    /**
+     * All entries in the database.
+     *
+     * @return A collection of entries in the database.
+     */
+    public Set<Map.Entry<String, Map<String, Object>>> entrySet() {
+        return store.entrySet();
     }
 
     /**

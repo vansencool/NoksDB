@@ -4,6 +4,7 @@ import net.vansen.noksdb.compression.impl.DeflateCompression;
 import net.vansen.noksdb.compression.impl.GzipCompression;
 import net.vansen.noksdb.compression.impl.LZMACompression;
 import net.vansen.noksdb.compression.impl.SnappyCompression;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +21,7 @@ import java.util.zip.Deflater;
 public class CompressionFactory {
 
     /**
-     * A map of registered Compression instances, keyed by name.
+     * An object of registered Compression instances, keyed by name.
      */
     private static final Map<String, Compression> compressions = new ConcurrentHashMap<>();
 
@@ -30,7 +31,7 @@ public class CompressionFactory {
      * @param name        the name of the Compression instance
      * @param compression the Compression instance to register
      */
-    public static void registerCompression(String name, Compression compression) {
+    public static void registerCompression(@NotNull String name, @NotNull Compression compression) {
         compressions.put(name, compression);
     }
 
@@ -40,7 +41,7 @@ public class CompressionFactory {
      * @param name the name of the Compression instance to retrieve
      * @return the Compression instance with the given name, or null if not found
      */
-    public static Compression getCompression(String name) {
+    public static Compression getCompression(@NotNull String name) {
         return compressions.get(name);
     }
 
