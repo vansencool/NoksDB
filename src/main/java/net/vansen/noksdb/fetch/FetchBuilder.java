@@ -66,9 +66,10 @@ public class FetchBuilder {
      * Casts the retrieved data to the specified class.
      *
      * @param clazz The class to cast the retrieved data to.
+     * @param <T>   The type of the class.
      * @return The instance of the specified class.
      */
-    public <T> T get(Class<T> clazz) {
+    public <T> T get(@NotNull Class<T> clazz) {
         return clazz.cast(get());
     }
 
@@ -76,9 +77,10 @@ public class FetchBuilder {
      * Casts the retrieved data to the specified class asynchronously.
      *
      * @param clazz The class to cast the retrieved data to.
+     * @param <T>   The type of the class.
      * @return A {@link CompletableFuture} containing the instance of the specified class.
      */
-    public <T> CompletableFuture<T> getAsync(Class<T> clazz) {
+    public <T> CompletableFuture<T> getAsync(@NotNull Class<T> clazz) {
         return getAsync().thenApply(clazz::cast);
     }
 }

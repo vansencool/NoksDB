@@ -44,6 +44,7 @@ public class NoksDB {
      *
      * @param builder A {@link NoksDBSetup} object containing the configuration for the database.
      */
+    @SuppressWarnings("all")
     public NoksDB(@NotNull NoksDBSetup builder) {
         this.storageFile = builder.storageFile();
         this.autoSave = builder.autoSave();
@@ -254,8 +255,8 @@ public class NoksDB {
      *
      * @return The object representing the database's rows and their data.
      */
-    public ConcurrentHashMap<String, Map<String, Object>> store() {
-        return (ConcurrentHashMap<String, Map<String, Object>>) store;
+    public Map<String, Map<String, Object>> store() {
+        return store;
     }
 
     /**

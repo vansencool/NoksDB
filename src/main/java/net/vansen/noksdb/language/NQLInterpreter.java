@@ -1,6 +1,5 @@
 package net.vansen.noksdb.language;
 
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import net.vansen.noksdb.NoksDB;
 import net.vansen.noksdb.entry.UpdateBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +34,6 @@ public class NQLInterpreter {
      * @return The result of the query, or "-" if the query doesn't return anything.
      */
     @Nullable
-    @CanIgnoreReturnValue
     public Object execute(@NotNull String query) {
         String[] tokens = query.trim().split("\\s+", 2);
         String command = tokens[0].toUpperCase();

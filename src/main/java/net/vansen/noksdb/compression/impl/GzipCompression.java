@@ -23,11 +23,9 @@ public class GzipCompression implements Compression {
 
     @Override
     public byte[] compress(byte[] data) {
-        try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            GZIPOutputStream gzOut = new GZIPOutputStream(bos);
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             GZIPOutputStream gzOut = new GZIPOutputStream(bos)) {
             gzOut.write(data);
-            gzOut.close();
             return bos.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("Error compressing data", e);
@@ -36,16 +34,13 @@ public class GzipCompression implements Compression {
 
     @Override
     public byte[] decompress(byte[] data, int length) {
-        try {
-            ByteArrayInputStream bis = new ByteArrayInputStream(data);
-            GZIPInputStream gzIn = new GZIPInputStream(bis);
+        try (GZIPInputStream gzIn = new GZIPInputStream(new ByteArrayInputStream(data))) {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             final byte[] buffer = new byte[length];
             int n;
             while (-1 != (n = gzIn.read(buffer))) {
                 bos.write(buffer, 0, n);
             }
-            gzIn.close();
             return bos.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("Error decompressing data", e);

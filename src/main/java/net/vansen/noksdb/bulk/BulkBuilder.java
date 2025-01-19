@@ -2,11 +2,11 @@ package net.vansen.noksdb.bulk;
 
 import net.vansen.noksdb.NoksDB;
 import net.vansen.noksdb.collection.DynamicObjectArrayList;
+import net.vansen.noksdb.maps.NoksMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A builder class for performing multiple database operations in bulk.
@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BulkBuilder {
     private final NoksDB db;
     private final DynamicObjectArrayList<Runnable> operations = new DynamicObjectArrayList<>();
-    private int count = -1;
+    private int count = 0;
 
     /**
      * Creates a new instance of the {@link BulkBuilder}.
@@ -34,8 +34,9 @@ public class BulkBuilder {
      * @param values An object of field names and values to associate with the row.
      * @return This {@link BulkBuilder} instance.
      */
+    @SuppressWarnings("all")
     public BulkBuilder add(@NotNull String key, @NotNull Map<String, Object> values) {
-        operations.add(count++, () -> db.store().put(key, new ConcurrentHashMap<>(values)));
+        operations.add(count++, () -> db.store().put(key, new NoksMap<>(values)));
         return this;
     }
 
@@ -94,21 +95,47 @@ public class BulkBuilder {
     }
 
     /**
-     * Executes all queued operations in parallel.
-     * After execution, all operations are cleared from the queue.
+     * Executes all queued operations in parallel
+     * <p>
+     * This is ordered.
+     *
+     * @see BulkBuilder#executeUnOrdered()
      */
     public void execute() {
         operations.parallelStream()
-                .forEach(Runnable::run);
+                .forEachOrdered(Runnable::run);
         db.triggerSave();
     }
 
     /**
      * Executes all queued operations asynchronously in parallel.
+     * <p>
+     * This is ordered.
      *
-     * @return A {@link CompletableFuture} representing the asynchronous execution of all operations.
+     * @return A {@link CompletableFuture} representing the asynchronous execution.
      */
     public CompletableFuture<Void> executeAsync() {
         return CompletableFuture.runAsync(this::execute, db.executor());
+    }
+
+    /**
+     * Executes all queued operations in parallel.
+     * <p>
+     * This is not ordered.
+     */
+    public void executeUnOrdered() {
+        operations.parallelStream().forEach(Runnable::run);
+        db.triggerSave();
+    }
+
+    /**
+     * Executes all queued operations asynchronously in parallel.
+     * <p>
+     * This is not ordered.
+     *
+     * @return A {@link CompletableFuture} representing the asynchronous execution.
+     */
+    public CompletableFuture<Void> executeUnOrderedAsync() {
+        return CompletableFuture.runAsync(this::executeUnOrdered, db.executor());
     }
 }

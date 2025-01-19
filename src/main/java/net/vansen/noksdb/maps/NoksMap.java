@@ -31,6 +31,11 @@ public class NoksMap<K, V> implements Map<K, V> {
         this.threshold = (int) (DEFAULT_CAPACITY * LOAD_FACTOR);
     }
 
+    public NoksMap(Map<K, V> map) {
+        this();
+        putAll(map);
+    }
+
     @Override
     public void clear() {
         Arrays.fill(table, null);

@@ -18,7 +18,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation 'com.github.vansencool:NoksDB:1.0.2'
+    implementation 'com.github.vansencool:NoksDB:1.0.4'
 }
 ```
 
@@ -37,6 +37,6 @@ dependencies {
 <dependency>
     <groupId>com.github.vansencool</groupId>
     <artifactId>NoksDB</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.4</version>
 </dependency>
 ```

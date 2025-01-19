@@ -24,7 +24,7 @@ public class NoksDBSetup {
     private boolean compressionBySerializer = false;
     private ExecutorService executor;
     private DatabaseManager databaseManager = new DefaultDatabaseManager();
-    private MapType mapType = MapType.NOKS_MAP;
+    private MapType mapType = MapType.CONCURRENT_HASH_MAP;
 
     /**
      * Sets the file used to store the database.
@@ -39,6 +39,8 @@ public class NoksDBSetup {
 
     /**
      * Enables or disables auto-saving.
+     * <p>
+     * By default, auto-saving is enabled.
      *
      * @param autoSave True to enable auto-saving, false to disable it.
      * @return This {@link NoksDBSetup} instance.
@@ -50,7 +52,10 @@ public class NoksDBSetup {
 
     /**
      * Enables asynchronous auto-saving.
+     * <p>
+     * By default, asynchronous auto-saving is disabled.
      *
+     * @param autoSaveAsync True to enable asynchronous auto-saving, false to disable it.
      * @return This {@link NoksDBSetup} instance.
      */
     public NoksDBSetup autoSaveAsync(boolean autoSaveAsync) {
@@ -60,7 +65,10 @@ public class NoksDBSetup {
 
     /**
      * Sets whether serializer (Fury) should compress strings and numbers.
+     * <p>
+     * By default, compression by serializer is disabled.
      *
+     * @param compressionBySerializer True if compression by serializer is enabled, false otherwise.
      * @return This {@link NoksDBSetup} instance.
      */
     public NoksDBSetup compressionBySerializer(boolean compressionBySerializer) {
@@ -70,6 +78,8 @@ public class NoksDBSetup {
 
     /**
      * Sets the executor service for handling asynchronous tasks.
+     * <p>
+     * By default, a fixed thread pool with 4 threads is used (made in the constructor of {@link NoksDB}).
      *
      * @param executor The executor service to use.
      * @return This {@link NoksDBSetup} instance.
@@ -81,6 +91,8 @@ public class NoksDBSetup {
 
     /**
      * Sets the compression method for saving and loading the database.
+     * <p>
+     * By default, {@link CompressionBased#snappyOrNone()} is used.
      *
      * @param compressor The compression method to use.
      * @return This {@link NoksDBSetup} instance.
@@ -92,6 +104,8 @@ public class NoksDBSetup {
 
     /**
      * Sets the database manager for managing the database.
+     * <p>
+     * By default, {@link DefaultDatabaseManager} is used.
      *
      * @param databaseManager The database manager to use.
      * @return This {@link NoksDBSetup} instance.
@@ -101,6 +115,14 @@ public class NoksDBSetup {
         return this;
     }
 
+    /**
+     * Sets the map type for the database.
+     * <p>
+     * By default, {@link MapType#NOKS_MAP} is used.
+     *
+     * @param mapType The map type to use.
+     * @return This {@link NoksDBSetup} instance.
+     */
     public NoksDBSetup mapType(@NotNull MapType mapType) {
         this.mapType = mapType;
         return this;

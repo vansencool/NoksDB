@@ -39,9 +39,7 @@ public class LZMACompression implements Compression {
     @Override
     public byte[] decompress(byte[] data, int length) {
         try {
-            ByteArrayInputStream bis = new ByteArrayInputStream(data);
-            BufferedInputStream in = new BufferedInputStream(bis);
-            LZMACompressorInputStream lzIn = new LZMACompressorInputStream(in);
+            LZMACompressorInputStream lzIn = new LZMACompressorInputStream(new BufferedInputStream(new ByteArrayInputStream(data)));
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             final byte[] buffer = new byte[length];
             int n;

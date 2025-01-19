@@ -2,9 +2,7 @@ package net.vansen.noksdb.compression.impl;
 
 import net.vansen.noksdb.compression.Compression;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
@@ -59,7 +57,7 @@ public class DeflateCompression implements Compression {
     }
 
     @Override
-    public byte[] compress(byte[] data) throws IOException {
+    public byte[] compress(byte[] data) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream(data.length);
         Deflater compressor = new Deflater();
         compressor.setLevel(level);
@@ -71,28 +69,22 @@ public class DeflateCompression implements Compression {
             bos.write(buf, 0, count);
         }
         compressor.end();
-        byte[] compressed = bos.toByteArray();
-        bos.close();
-        return compressed;
+        return bos.toByteArray();
     }
 
     @Override
     public byte[] decompress(byte[] compressed, int length) {
         try {
-            ByteArrayInputStream bis = new ByteArrayInputStream(compressed);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream(compressed.length);
             Inflater decompressor = new Inflater();
             decompressor.setInput(compressed);
             byte[] buf = new byte[length];
-            ByteArrayOutputStream bos = new ByteArrayOutputStream(compressed.length);
             while (!decompressor.finished()) {
                 int count = decompressor.inflate(buf);
                 bos.write(buf, 0, count);
             }
             decompressor.end();
-            byte[] decompressed = bos.toByteArray();
-            bos.close();
-            bis.close();
-            return decompressed;
+            return bos.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("Error decompressing data", e);
         }
