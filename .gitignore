@@ -49,7 +49,6 @@ bin/
 
 ### Tests ###
 /tests
-/results
 **/*.jfr
 **/*.jfr.txt
 .profileconfig.json

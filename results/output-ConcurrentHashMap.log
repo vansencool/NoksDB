@@ -1,0 +1,246 @@
+################# Notes: NoksDB with ConcurrentHashMap #################
+
+Information:
+  Physical Cores: 8
+  Logical Cores: 16
+  Allocated Memory: 8172 MB
+  Max Memory: 32678 MB
+  CPU Model: AMD Ryzen 7 3700X 8-Core Processor             
+  Memory type: DDR4
+  Operating System: Windows
+
+
+Num Entries: 1
+-------------------------------
+NoksMap put:
+  Average time: 7110 ns
+  Average time per entry: 7110.0 ns
+  Average time per entry (ms): 0.00711 ms
+  Total time: 7.11E-6 seconds
+
+ConcurrentHashMap put:
+  Average time: 991 ns
+  Average time per entry: 991.0 ns
+  Average time per entry (ms): 9.91E-4 ms
+  Total time: 9.91E-7 seconds
+
+NoksDB put:
+  Average time: 30894 ns
+  Average time per entry: 30894.0 ns
+  Average time per entry (ms): 0.030894 ms
+  Total time: 3.0894E-5 seconds
+
+NoksMap get:
+  Average time: 761 ns
+  Average time per entry: 761.0 ns
+  Average time per entry (ms): 7.61E-4 ms
+  Total time: 7.61E-7 seconds
+
+ConcurrentHashMap get:
+  Average time: 673 ns
+  Average time per entry: 673.0 ns
+  Average time per entry (ms): 6.73E-4 ms
+  Total time: 6.73E-7 seconds
+
+NoksDB get:
+  Average time: 1337 ns
+  Average time per entry: 1337.0 ns
+  Average time per entry (ms): 0.001337 ms
+  Total time: 1.337E-6 seconds
+
+-------------------------------
+Num Entries: 10
+-------------------------------
+NoksMap put:
+  Average time: 7450 ns
+  Average time per entry: 745.0 ns
+  Average time per entry (ms): 7.45E-4 ms
+  Total time: 7.45E-6 seconds
+
+ConcurrentHashMap put:
+  Average time: 1989 ns
+  Average time per entry: 198.9 ns
+  Average time per entry (ms): 1.989E-4 ms
+  Total time: 1.989E-6 seconds
+
+NoksDB put:
+  Average time: 57260 ns
+  Average time per entry: 5726.0 ns
+  Average time per entry (ms): 0.005726 ms
+  Total time: 5.726E-5 seconds
+
+NoksMap get:
+  Average time: 1725 ns
+  Average time per entry: 172.5 ns
+  Average time per entry (ms): 1.725E-4 ms
+  Total time: 1.725E-6 seconds
+
+ConcurrentHashMap get:
+  Average time: 1694 ns
+  Average time per entry: 169.4 ns
+  Average time per entry (ms): 1.694E-4 ms
+  Total time: 1.694E-6 seconds
+
+NoksDB get:
+  Average time: 4524 ns
+  Average time per entry: 452.4 ns
+  Average time per entry (ms): 4.524E-4 ms
+  Total time: 4.524E-6 seconds
+
+-------------------------------
+Num Entries: 100
+-------------------------------
+NoksMap put:
+  Average time: 12310 ns
+  Average time per entry: 123.1 ns
+  Average time per entry (ms): 1.2309999999999998E-4 ms
+  Total time: 1.231E-5 seconds
+
+ConcurrentHashMap put:
+  Average time: 16396 ns
+  Average time per entry: 163.96 ns
+  Average time per entry (ms): 1.6396E-4 ms
+  Total time: 1.6396E-5 seconds
+
+NoksDB put:
+  Average time: 95671 ns
+  Average time per entry: 956.71 ns
+  Average time per entry (ms): 9.5671E-4 ms
+  Total time: 9.5671E-5 seconds
+
+NoksMap get:
+  Average time: 7040 ns
+  Average time per entry: 70.4 ns
+  Average time per entry (ms): 7.04E-5 ms
+  Total time: 7.04E-6 seconds
+
+ConcurrentHashMap get:
+  Average time: 7353 ns
+  Average time per entry: 73.53 ns
+  Average time per entry (ms): 7.353E-5 ms
+  Total time: 7.353E-6 seconds
+
+NoksDB get:
+  Average time: 18568 ns
+  Average time per entry: 185.68 ns
+  Average time per entry (ms): 1.8568E-4 ms
+  Total time: 1.8568E-5 seconds
+
+-------------------------------
+Num Entries: 1000
+-------------------------------
+NoksMap put:
+  Average time: 38936 ns
+  Average time per entry: 38.936 ns
+  Average time per entry (ms): 3.8936E-5 ms
+  Total time: 3.8936E-5 seconds
+
+ConcurrentHashMap put:
+  Average time: 91997 ns
+  Average time per entry: 91.997 ns
+  Average time per entry (ms): 9.1997E-5 ms
+  Total time: 9.1997E-5 seconds
+
+NoksDB put:
+  Average time: 206464 ns
+  Average time per entry: 206.464 ns
+  Average time per entry (ms): 2.06464E-4 ms
+  Total time: 2.06464E-4 seconds
+
+NoksMap get:
+  Average time: 30751 ns
+  Average time per entry: 30.751 ns
+  Average time per entry (ms): 3.0751000000000004E-5 ms
+  Total time: 3.0751E-5 seconds
+
+ConcurrentHashMap get:
+  Average time: 31490 ns
+  Average time per entry: 31.49 ns
+  Average time per entry (ms): 3.149E-5 ms
+  Total time: 3.149E-5 seconds
+
+NoksDB get:
+  Average time: 58642 ns
+  Average time per entry: 58.642 ns
+  Average time per entry (ms): 5.8642000000000005E-5 ms
+  Total time: 5.8642E-5 seconds
+
+-------------------------------
+Num Entries: 10000
+-------------------------------
+NoksMap put:
+  Average time: 396101 ns
+  Average time per entry: 39.6101 ns
+  Average time per entry (ms): 3.96101E-5 ms
+  Total time: 3.96101E-4 seconds
+
+ConcurrentHashMap put:
+  Average time: 846489 ns
+  Average time per entry: 84.6489 ns
+  Average time per entry (ms): 8.46489E-5 ms
+  Total time: 8.46489E-4 seconds
+
+NoksDB put:
+  Average time: 897838 ns
+  Average time per entry: 89.7838 ns
+  Average time per entry (ms): 8.97838E-5 ms
+  Total time: 8.97838E-4 seconds
+
+NoksMap get:
+  Average time: 314180 ns
+  Average time per entry: 31.418 ns
+  Average time per entry (ms): 3.1417999999999996E-5 ms
+  Total time: 3.1418E-4 seconds
+
+ConcurrentHashMap get:
+  Average time: 326133 ns
+  Average time per entry: 32.6133 ns
+  Average time per entry (ms): 3.26133E-5 ms
+  Total time: 3.26133E-4 seconds
+
+NoksDB get:
+  Average time: 562476 ns
+  Average time per entry: 56.2476 ns
+  Average time per entry (ms): 5.62476E-5 ms
+  Total time: 5.62476E-4 seconds
+
+-------------------------------
+Num Entries: 100000
+-------------------------------
+NoksMap put:
+  Average time: 5164481 ns
+  Average time per entry: 51.64481 ns
+  Average time per entry (ms): 5.164481E-5 ms
+  Total time: 0.005164481 seconds
+
+ConcurrentHashMap put:
+  Average time: 13086524 ns
+  Average time per entry: 130.86524 ns
+  Average time per entry (ms): 1.3086524E-4 ms
+  Total time: 0.013086524 seconds
+
+NoksDB put:
+  Average time: 14541207 ns
+  Average time per entry: 145.41207 ns
+  Average time per entry (ms): 1.4541207E-4 ms
+  Total time: 0.014541207 seconds
+
+NoksMap get:
+  Average time: 3517108 ns
+  Average time per entry: 35.17108 ns
+  Average time per entry (ms): 3.5171080000000005E-5 ms
+  Total time: 0.003517108 seconds
+
+ConcurrentHashMap get:
+  Average time: 4277563 ns
+  Average time per entry: 42.77563 ns
+  Average time per entry (ms): 4.277563E-5 ms
+  Total time: 0.004277563 seconds
+
+NoksDB get:
+  Average time: 6752849 ns
+  Average time per entry: 67.52849 ns
+  Average time per entry (ms): 6.752849E-5 ms
+  Total time: 0.006752849 seconds
+
+-------------------------------
