@@ -55,6 +55,7 @@ public class NoksDB {
                 .withLanguage(Language.JAVA)
                 .withAsyncCompilation(true)
                 .requireClassRegistration(builder.requireClassRegistration())
+                .suppressClassRegistrationWarnings(true)
                 .withNumberCompressed(builder.compressionBySerializer())
                 .withStringCompressed(builder.compressionBySerializer())
                 .withCompatibleMode(CompatibleMode.COMPATIBLE);
