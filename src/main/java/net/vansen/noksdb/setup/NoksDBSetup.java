@@ -22,6 +22,7 @@ public class NoksDBSetup {
     private boolean autoSaveAsync = false;
     private @NotNull Compression compressor = CompressionBased.snappyOrNone();
     private boolean compressionBySerializer = false;
+    private boolean requireClassRegistration = true;
     private ExecutorService executor;
     private DatabaseManager databaseManager = new DefaultDatabaseManager();
     private MapType mapType = MapType.CONCURRENT_HASH_MAP;
@@ -73,6 +74,19 @@ public class NoksDBSetup {
      */
     public NoksDBSetup compressionBySerializer(boolean compressionBySerializer) {
         this.compressionBySerializer = compressionBySerializer;
+        return this;
+    }
+
+    /**
+     * Sets whether class registration is required.
+     * <p>
+     * By default, class registration is enabled.
+     *
+     * @param requireClassRegistration True if class registration is required, false otherwise.
+     * @return This {@link NoksDBSetup} instance.
+     */
+    public NoksDBSetup requireClassRegistration(boolean requireClassRegistration) {
+        this.requireClassRegistration = requireClassRegistration;
         return this;
     }
 
@@ -189,6 +203,15 @@ public class NoksDBSetup {
      */
     public boolean compressionBySerializer() {
         return compressionBySerializer;
+    }
+
+    /**
+     * Gets whether class registration is required.
+     *
+     * @return True if class registration is required, false otherwise.
+     */
+    public boolean requireClassRegistration() {
+        return requireClassRegistration;
     }
 
     /**

@@ -54,6 +54,7 @@ public class NoksDB {
         FuryBuilder fury = Fury.builder()
                 .withLanguage(Language.JAVA)
                 .withAsyncCompilation(true)
+                .requireClassRegistration(builder.requireClassRegistration())
                 .withNumberCompressed(builder.compressionBySerializer())
                 .withStringCompressed(builder.compressionBySerializer())
                 .withCompatibleMode(CompatibleMode.COMPATIBLE);

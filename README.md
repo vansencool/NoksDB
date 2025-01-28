@@ -4,10 +4,6 @@ In-memory database, with similar features (and language) to SQL
 
 # Installation
 
-In-memory database, with similar features (and language) to SQL
-
-# Installation
-
 **Gradle**
 
 ```groovy
@@ -18,7 +14,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation 'com.github.vansencool:NoksDB:1.0.4'
+    implementation 'com.github.vansencool:NoksDB:1.0.5'
 }
 ```
 
@@ -37,6 +33,6 @@ dependencies {
 <dependency>
     <groupId>com.github.vansencool</groupId>
     <artifactId>NoksDB</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
 </dependency>
 ```
